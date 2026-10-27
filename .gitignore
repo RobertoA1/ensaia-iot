@@ -1,0 +1,66 @@
+# Credenciales y configuración local
+.env
+.env.*
+!.env.example
+**/secrets.h
+**/config.personal.h
+.private/
+.vercel/
+.aws/
+
+# Entornos, dependencias y cachés
+.venv*/
+venv*/
+node_modules/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+*.py[cod]
+coverage/
+
+# Compilaciones y registros
+build/
+dist/
+*.log
+*.bin
+*.elf
+*.map
+*.tsbuildinfo
+
+# Datos generados y grabaciones de participantes
+/entrenador_oratoria/data/
+/entrenador_oratoria/evidencias/
+/revision_ensaia_20261019/data/
+/revision_ensaia_20261019/evidencias/
+/simulacion_mqtt/data/
+/simulacion_mqtt/evidencias/
+/output/
+/tmp/
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+*.jsonl
+*.wav
+*.mp3
+*.m4a
+*.ogg
+
+# Paquetes generados: pueden contener credenciales y datos privados
+/*.zip
+/*.rar
+*.7z
+
+# Modelos descargables para transcripción y voz
+/ensaia_cloud/whisper_local/voices/
+*.onnx
+*.gguf
+
+# Archivos locales del editor y del sistema
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
