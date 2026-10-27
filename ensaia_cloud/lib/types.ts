@@ -1,5 +1,5 @@
 export type Phase = 'pre' | 'post' | 'practice';
-export interface Account {username: string; deviceId: string; passwordHash: string; createdAt: string}
+export interface Account {username: string; deviceId: string; passwordHash: string; createdAt: string; authVersion?:string}
 export interface Presence {online: boolean; at: number; deviceId: string; username: string; firmware: string; rssi?: number; peak?: number; sid?: string}
 export interface SpeechEvent {id: number; at: string; kind: 'transcript' | 'advice' | 'system' | 'error'; text: string; audioMs?: number; startMs?:number; endMs?:number; rangeSource?:'provider'|'block'}
 export interface Metrics {
