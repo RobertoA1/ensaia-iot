@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Oratoria · Entrenador conectado</title><link rel="stylesheet" href="/static/style.css"></head>
+<body><main>
+<header><div><p class="eyebrow">LABORATORIO IOT + IA</p><h1>Practica. Escucha.<br>Mejora tu exposición.</h1>
+<p class="intro">Graba una sesión, recibe consejos breves y conserva las evidencias para tu evaluación.</p></div>
+<div class="connection"><span id="connection" class="badge">Sin conectar</span><p id="device">ESP8266 · esperando conexión</p></div></header>
+<section class="access" aria-labelledby="accessTitle"><h2 id="accessTitle">Acceso al laboratorio</h2>
+<label for="token">Token local de acceso <small>(APP_TOKEN del archivo .env; no es tu clave de OpenAI)</small></label>
+<div class="inline"><input id="token" type="password" autocomplete="off" placeholder="Pega el token local"><button id="connect">Conectar</button></div>
+<p id="accessMessage" role="status">Tu clave de OpenAI permanece en la laptop.</p></section>
+<div id="demoBanner" class="notice" hidden>DEMOSTRACIÓN: el texto es simulado y no corresponde al reconocimiento de tu voz. No utilizar estos resultados en el paper.</div>
+<section class="session" aria-labelledby="sessionTitle"><div class="section-title"><h2 id="sessionTitle">Tu sesión</h2><span id="clock">00:00</span></div>
+<div class="form-grid"><label>Código del participante<input id="participant" value="P001" maxlength="32" pattern="[A-Za-z0-9_-]+" autocomplete="off"></label>
+<label>Etapa<select id="phase"><option value="practice">Práctica</option><option value="pre">Antes</option><option value="post">Después</option></select></label></div>
+<label class="check"><input id="feedback" type="checkbox" checked>Mostrar recomendaciones durante la sesión</label>
+<label class="check"><input id="playAudio" type="checkbox">Escuchar a GPT-Live en el celular <small>(usa auriculares para evitar que se vuelva a grabar)</small></label>
+<label class="check consent"><input id="consent" type="checkbox">Acepto grabar y guardar esta sesión. En modo real, el audio se envía a OpenAI para su procesamiento.</label>
+<div class="buttons"><button id="start" disabled>Iniciar con GPT-Live</button><button id="demo" class="secondary" disabled>Probar sin micrófono ni API</button><button id="stop" class="danger" disabled>Finalizar y guardar</button></div>
+<p id="sessionMessage" role="status">Conecta el laboratorio para comenzar. El celular necesita HTTPS de confianza.</p></section>
+<section class="metrics" aria-label="Indicadores exploratorios">
+<article><span>Palabras</span><strong id="words">0</strong></article>
+<article><span>Candidatos a muletilla</span><strong id="fillers">0</strong></article>
+<article><span>Repeticiones candidatas</span><strong id="repetitions">0</strong></article>
+<article><span>Palabras / minuto</span><strong id="pace">—</strong></article></section>
+<p class="caption">Indicadores automáticos exploratorios. Las muletillas requieren revisión humana; los tiempos del texto son aproximados.</p>
+<div class="columns"><section class="panel"><div class="section-title"><h2>Transcripción</h2><span class="badge pale">Confirmada vía MQTT</span></div>
+<p id="transcript" class="transcript">Tu discurso aparecerá aquí.</p></section>
+<section class="panel"><h2>Consejos de tu entrenador</h2><p id="coach" class="coach">Recibirás mensajes breves durante las pausas del discurso.</p>
+<p id="relay" class="caption">La placa confirma cada fragmento de texto y cada recomendación.</p></section></div>
+<section class="panel"><div class="section-title"><h2>Sesiones guardadas</h2><button id="refresh" class="small secondary" disabled>Actualizar</button></div>
+<div id="history"><p class="caption">Conecta el laboratorio para consultar tus registros.</p></div></section>
+<section id="review" class="panel" hidden><h2>Revisión de la sesión</h2><p id="reviewSummary"></p>
+<label>Código del revisor<input id="reviewer" value="R001" maxlength="32"></label>
+<div class="inline"><select id="annotationLabel"><option value="confirmed">Confirmado en audio</option><option value="rejected">Candidato descartado</option><option value="uncertain">Dudoso</option><option value="missed_in_transcript">Omisión en la transcripción</option></select></div>
+<label for="annotationNote">Nota y tiempo del audio</label><textarea id="annotationNote" maxlength="1000" placeholder="Ejemplo: 00:15.2, se escucha «eh», omitido en el texto."></textarea>
+<button id="saveAnnotation" class="secondary">Guardar anotación de sesión</button><p id="annotationStatus" role="status"></p></section>
+<footer><p>Modelo solicitado: <strong>gpt-live-1</strong> · Audio PCM16 mono, 16 kHz · Servidor local y registros exportables.</p>
+<p>En esta fase el ESP8266 utiliza una pasarela en la laptop para la conexión segura con OpenAI.</p></footer>
+</main><script src="/static/app.js" defer></script></body></html>

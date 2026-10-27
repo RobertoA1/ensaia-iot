@@ -1,0 +1,42 @@
+[
+  {
+    "start_ms": 16560,
+    "end_ms": 18180,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 23300,
+    "end_ms": 24100,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 35740,
+    "end_ms": 37100,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 37940,
+    "end_ms": 38800,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 45280,
+    "end_ms": 46940,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 50480,
+    "end_ms": 51380,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 63180,
+    "end_ms": 65120,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 70900,
+    "end_ms": 71888,
+    "origin": "rms_threshold_heuristic"
+  }
+]

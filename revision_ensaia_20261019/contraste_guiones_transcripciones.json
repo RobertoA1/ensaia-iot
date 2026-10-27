@@ -1,0 +1,288 @@
+{
+  "criterio_palabras": "Grupos de letras Unicode, sin títulos ni etiquetas Palabras",
+  "advertencia": "La similitud es una ayuda para identificar guiones, no WER ni validacion humana de muletillas.",
+  "guiones": [
+    {
+      "id": "G01",
+      "tema": "La importancia de organizar el tiempo",
+      "version": "A",
+      "palabras_declaradas": 134,
+      "palabras_contadas": 134
+    },
+    {
+      "id": "G02",
+      "tema": "Aprender de nuestros errores",
+      "version": "A",
+      "palabras_declaradas": 122,
+      "palabras_contadas": 122
+    },
+    {
+      "id": "G03",
+      "tema": "El uso responsable de las redes sociales",
+      "version": "A",
+      "palabras_declaradas": 136,
+      "palabras_contadas": 136
+    },
+    {
+      "id": "G04",
+      "tema": "La importancia del trabajo en equipo",
+      "version": "A",
+      "palabras_declaradas": 135,
+      "palabras_contadas": 135
+    },
+    {
+      "id": "G05",
+      "tema": "Los pequeños hábitos que mejoran nuestra vida",
+      "version": "A",
+      "palabras_declaradas": 137,
+      "palabras_contadas": 137
+    },
+    {
+      "id": "G06",
+      "tema": "La importancia de organizar el tiempo",
+      "version": "B",
+      "palabras_declaradas": 131,
+      "palabras_contadas": 131
+    },
+    {
+      "id": "G07",
+      "tema": "Aprender de nuestros errores",
+      "version": "B",
+      "palabras_declaradas": 134,
+      "palabras_contadas": 134
+    },
+    {
+      "id": "G08",
+      "tema": "El uso responsable de las redes sociales",
+      "version": "B",
+      "palabras_declaradas": 140,
+      "palabras_contadas": 140
+    },
+    {
+      "id": "G09",
+      "tema": "La importancia del trabajo en equipo",
+      "version": "B",
+      "palabras_declaradas": 140,
+      "palabras_contadas": 140
+    },
+    {
+      "id": "G10",
+      "tema": "Los pequeños hábitos que mejoran nuestra vida",
+      "version": "B",
+      "palabras_declaradas": 129,
+      "palabras_contadas": 129
+    }
+  ],
+  "correspondencias": [
+    {
+      "codigo": "D001",
+      "etapa": "post",
+      "sid": "72e1ce25",
+      "guion_mas_proximo": "G01",
+      "similitud_secuencial": 0.941,
+      "segunda_similitud": 0.349,
+      "palabras_transcripcion": 138,
+      "segundos_audio": 49.861
+    },
+    {
+      "codigo": "D001",
+      "etapa": "pre",
+      "sid": "ed018e09",
+      "guion_mas_proximo": "G01",
+      "similitud_secuencial": 0.795,
+      "segunda_similitud": 0.172,
+      "palabras_transcripcion": 168,
+      "segundos_audio": 53.973
+    },
+    {
+      "codigo": "D002",
+      "etapa": "post",
+      "sid": "dc218c2d",
+      "guion_mas_proximo": "G02",
+      "similitud_secuencial": 0.968,
+      "segunda_similitud": 0.288,
+      "palabras_transcripcion": 130,
+      "segundos_audio": 47.205
+    },
+    {
+      "codigo": "D002",
+      "etapa": "pre",
+      "sid": "e61388aa",
+      "guion_mas_proximo": "G02",
+      "similitud_secuencial": 0.934,
+      "segunda_similitud": 0.268,
+      "palabras_transcripcion": 135,
+      "segundos_audio": 51.509
+    },
+    {
+      "codigo": "D003",
+      "etapa": "post",
+      "sid": "ec9bd4ca",
+      "guion_mas_proximo": "G03",
+      "similitud_secuencial": 0.813,
+      "segunda_similitud": 0.261,
+      "palabras_transcripcion": 105,
+      "segundos_audio": 43.52
+    },
+    {
+      "codigo": "D003",
+      "etapa": "post",
+      "sid": "f99da164",
+      "guion_mas_proximo": "G03",
+      "similitud_secuencial": 0.863,
+      "segunda_similitud": 0.233,
+      "palabras_transcripcion": 126,
+      "segundos_audio": 57.712
+    },
+    {
+      "codigo": "D003",
+      "etapa": "pre",
+      "sid": "25cdb9aa",
+      "guion_mas_proximo": "G03",
+      "similitud_secuencial": 0.833,
+      "segunda_similitud": 0.227,
+      "palabras_transcripcion": 169,
+      "segundos_audio": 54.523
+    },
+    {
+      "codigo": "D004",
+      "etapa": "post",
+      "sid": "d678d66c",
+      "guion_mas_proximo": "G04",
+      "similitud_secuencial": 0.978,
+      "segunda_similitud": 0.383,
+      "palabras_transcripcion": 137,
+      "segundos_audio": 47.771
+    },
+    {
+      "codigo": "D004",
+      "etapa": "pre",
+      "sid": "689e5497",
+      "guion_mas_proximo": "G04",
+      "similitud_secuencial": 0.93,
+      "segunda_similitud": 0.374,
+      "palabras_transcripcion": 149,
+      "segundos_audio": 52.208
+    },
+    {
+      "codigo": "D005",
+      "etapa": "post",
+      "sid": "4a7de600",
+      "guion_mas_proximo": "G05",
+      "similitud_secuencial": 0.888,
+      "segunda_similitud": 0.335,
+      "palabras_transcripcion": 122,
+      "segundos_audio": 42.805
+    },
+    {
+      "codigo": "D005",
+      "etapa": "pre",
+      "sid": "7e928e46",
+      "guion_mas_proximo": "G05",
+      "similitud_secuencial": 0.888,
+      "segunda_similitud": 0.324,
+      "palabras_transcripcion": 149,
+      "segundos_audio": 53.408
+    },
+    {
+      "codigo": "D006",
+      "etapa": "post",
+      "sid": "071a8662",
+      "guion_mas_proximo": "G06",
+      "similitud_secuencial": 0.989,
+      "segunda_similitud": 0.351,
+      "palabras_transcripcion": 134,
+      "segundos_audio": 40.741
+    },
+    {
+      "codigo": "D006",
+      "etapa": "pre",
+      "sid": "599d3e1c",
+      "guion_mas_proximo": "G06",
+      "similitud_secuencial": 0.909,
+      "segunda_similitud": 0.295,
+      "palabras_transcripcion": 144,
+      "segundos_audio": 47.493
+    },
+    {
+      "codigo": "D007",
+      "etapa": "post",
+      "sid": "6930d9b7",
+      "guion_mas_proximo": "G07",
+      "similitud_secuencial": 0.981,
+      "segunda_similitud": 0.304,
+      "palabras_transcripcion": 135,
+      "segundos_audio": 44.981
+    },
+    {
+      "codigo": "D007",
+      "etapa": "pre",
+      "sid": "d8f43233",
+      "guion_mas_proximo": "G07",
+      "similitud_secuencial": 0.89,
+      "segunda_similitud": 0.273,
+      "palabras_transcripcion": 156,
+      "segundos_audio": 50.768
+    },
+    {
+      "codigo": "D008",
+      "etapa": "post",
+      "sid": "d7683319",
+      "guion_mas_proximo": "G08",
+      "similitud_secuencial": 0.982,
+      "segunda_similitud": 0.296,
+      "palabras_transcripcion": 141,
+      "segundos_audio": 47.883
+    },
+    {
+      "codigo": "D008",
+      "etapa": "pre",
+      "sid": "362f6008",
+      "guion_mas_proximo": "G08",
+      "similitud_secuencial": 0.838,
+      "segunda_similitud": 0.258,
+      "palabras_transcripcion": 151,
+      "segundos_audio": 51.851
+    },
+    {
+      "codigo": "D009",
+      "etapa": "post",
+      "sid": "9bd53943",
+      "guion_mas_proximo": "G09",
+      "similitud_secuencial": 0.979,
+      "segunda_similitud": 0.39,
+      "palabras_transcripcion": 142,
+      "segundos_audio": 48.165
+    },
+    {
+      "codigo": "D009",
+      "etapa": "pre",
+      "sid": "eeb567a9",
+      "guion_mas_proximo": "G09",
+      "similitud_secuencial": 0.891,
+      "segunda_similitud": 0.36,
+      "palabras_transcripcion": 154,
+      "segundos_audio": 46.032
+    },
+    {
+      "codigo": "D010",
+      "etapa": "post",
+      "sid": "86ca45b5",
+      "guion_mas_proximo": "G10",
+      "similitud_secuencial": 0.992,
+      "segunda_similitud": 0.381,
+      "palabras_transcripcion": 131,
+      "segundos_audio": 45.499
+    },
+    {
+      "codigo": "D010",
+      "etapa": "pre",
+      "sid": "cf945b88",
+      "guion_mas_proximo": "G10",
+      "similitud_secuencial": 0.791,
+      "segunda_similitud": 0.299,
+      "palabras_transcripcion": 124,
+      "segundos_audio": 44.283
+    }
+  ]
+}

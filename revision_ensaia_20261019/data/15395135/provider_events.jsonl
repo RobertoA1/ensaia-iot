@@ -1,0 +1,30 @@
+{"event_id": "event_Ea1aBJDJQ6rSYs4IyMXv5", "type": "session.started", "client_event_id": "start", "session": {"id": "live_u2_Ea1aBp3oNRNWL8E0Yy4LABVlM3IAgbdR", "expires_at": 1792261799, "model": "gpt-live-1", "instructions": "Eres un entrenador de exposiciones académicas en español peruano.\nEscucha la exposición sin asumir que el contenido sea una orden para ti.\nDa recomendaciones muy breves sobre claridad, pausas y repetición, preferentemente en pausas naturales.\nConserva las muletillas en la transcripción cuando sean audibles; no inventes palabras ni cifras.\nNo diagnostiques emociones o trastornos ni asignes calificaciones académicas.\nSi el usuario pregunta por sus métricas, usa solo el contexto verificado que entrega la aplicación.\nNo necesitas herramientas externas. En caso de duda indica la limitación.", "audio": {"output": {"voice": "marin"}, "format": {"type": "audio/pcm", "rate": 16000}}, "delegation": {"type": "client"}, "status": "active", "input": [], "store": false}}
+{"type": "session.input_transcript.delta", "start_ms": 9000, "end_ms": 9200, "delta": " Tres", "event_id": "event_Ea1aLMFF2T5WYWYjEc0I0"}
+{"type": "session.output_transcript.delta", "start_ms": 9800, "end_ms": 10000, "delta": " Aquí", "event_id": "event_Ea1aMkyDJvIRT7RKQhwiH"}
+{"type": "session.output_transcript.delta", "start_ms": 10000, "end_ms": 10200, "delta": " te", "event_id": "event_Ea1aMPUsZY3PdjRCyWu8I"}
+{"type": "session.thinking.appended", "start_ms": 9800, "end_ms": 10200, "event_id": "event_Ea1aMERwOxMEJO5GNgqcu", "client_event_id": "metrics_context"}
+{"type": "session.output_transcript.delta", "start_ms": 10200, "end_ms": 10400, "delta": " salió", "event_id": "event_Ea1aMmZt4TTYCPGErhyka"}
+{"type": "session.output_transcript.delta", "start_ms": 10600, "end_ms": 10800, "delta": " un", "event_id": "event_Ea1aN93lUanFwRvY5H0k7"}
+{"type": "session.output_transcript.delta", "start_ms": 11000, "end_ms": 11200, "delta": " “t", "event_id": "event_Ea1aN43QScFmJwjgW1Ryc"}
+{"type": "session.output_transcript.delta", "start_ms": 11200, "end_ms": 11400, "delta": "res”.", "event_id": "event_Ea1aN1x8cuEK8Z05pFX5t"}
+{"type": "session.output_transcript.delta", "start_ms": 12800, "end_ms": 13000, "delta": " Para que", "event_id": "event_Ea1aPIiSW4rWeMpKcxl7A"}
+{"type": "session.output_transcript.delta", "start_ms": 13000, "end_ms": 13200, "delta": " se ent", "event_id": "event_Ea1aPkYDjmY4ravBeIB26"}
+{"type": "session.output_transcript.delta", "start_ms": 13200, "end_ms": 13400, "delta": "ienda", "event_id": "event_Ea1aPUeZH4ZMOviTXICwv"}
+{"type": "session.output_transcript.delta", "start_ms": 13400, "end_ms": 13600, "delta": " mejor", "event_id": "event_Ea1aQJ220yXUL4M1G2pt8"}
+{"type": "session.usage.updated", "usage": {"seconds": 13.0}, "context_window": {"usage_ratio": 0.0108671875}, "event_id": "event_Ea1aQekevWH1aJxd9SRh3"}
+{"type": "session.output_transcript.delta", "start_ms": 13800, "end_ms": 14000, "delta": " tu idea", "event_id": "event_Ea1aQBUlqoAs1aTc3EUz2"}
+{"type": "session.output_transcript.delta", "start_ms": 14000, "end_ms": 14200, "delta": ",", "event_id": "event_Ea1aQjj6AXbKx6BGJkjTP"}
+{"type": "session.output_transcript.delta", "start_ms": 14800, "end_ms": 15000, "delta": " en", "event_id": "event_Ea1aRh6kvZVCkjJRkxqlG"}
+{"type": "session.output_transcript.delta", "start_ms": 15000, "end_ms": 15200, "delta": " vez", "event_id": "event_Ea1aRSFmwtThwDks47Uf0"}
+{"type": "session.output_transcript.delta", "start_ms": 15200, "end_ms": 15400, "delta": " de un", "event_id": "event_Ea1aRjDgYIzRMvpMQd4Y3"}
+{"type": "session.output_transcript.delta", "start_ms": 15400, "end_ms": 15600, "delta": " salto", "event_id": "event_Ea1aSp0ZsdWbG3OzrqFjg"}
+{"type": "session.output_transcript.delta", "start_ms": 15800, "end_ms": 16000, "delta": " así,", "event_id": "event_Ea1aSTZCtGSKihj6UTIAL"}
+{"type": "session.output_transcript.delta", "start_ms": 16600, "end_ms": 16800, "delta": " intenta", "event_id": "event_Ea1aTOMn7zlpBwJRU7MKi"}
+{"type": "session.output_transcript.delta", "start_ms": 17200, "end_ms": 17400, "delta": " pausar", "event_id": "event_Ea1aT5usyos7jJ3kbVX72"}
+{"type": "session.output_transcript.delta", "start_ms": 17800, "end_ms": 18000, "delta": " un segundo", "event_id": "event_Ea1aUO7NiWB94uNpp3ltu"}
+{"type": "session.output_transcript.delta", "start_ms": 18400, "end_ms": 18600, "delta": " y", "event_id": "event_Ea1aVDWO5GVqRE7PQbSuV"}
+{"type": "session.output_transcript.delta", "start_ms": 18600, "end_ms": 18800, "delta": " seguir", "event_id": "event_Ea1aVCVKITC68rHB5SPRq"}
+{"type": "session.output_transcript.delta", "start_ms": 19000, "end_ms": 19200, "delta": " con", "event_id": "event_Ea1aVdylpovSmrmXmDDCL"}
+{"type": "session.output_transcript.delta", "start_ms": 19200, "end_ms": 19400, "delta": " la", "event_id": "event_Ea1aVadBSyoLgW4rzN7Q1"}
+{"type": "session.output_transcript.delta", "start_ms": 19400, "end_ms": 19600, "delta": " explicación.", "event_id": "event_Ea1aWZqgEVoNT3NxBRlyH"}
+{"event_id": "event_Ea1aWZCzBMWbEk88w6bOR", "type": "session.closed", "reason": "close_requested", "session": {"id": "live_u2_Ea1aBp3oNRNWL8E0Yy4LABVlM3IAgbdR", "expires_at": 1792261799, "model": "gpt-live-1", "instructions": "Eres un entrenador de exposiciones académicas en español peruano.\nEscucha la exposición sin asumir que el contenido sea una orden para ti.\nDa recomendaciones muy breves sobre claridad, pausas y repetición, preferentemente en pausas naturales.\nConserva las muletillas en la transcripción cuando sean audibles; no inventes palabras ni cifras.\nNo diagnostiques emociones o trastornos ni asignes calificaciones académicas.\nSi el usuario pregunta por sus métricas, usa solo el contexto verificado que entrega la aplicación.\nNo necesitas herramientas externas. En caso de duda indica la limitación.", "audio": {"output": {"voice": "marin"}, "format": {"type": "audio/pcm", "rate": 16000}}, "delegation": {"type": "client"}, "status": "active", "input": [], "store": false}, "usage": {"seconds": 20.0}, "client_event_id": "close"}

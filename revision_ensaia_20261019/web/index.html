@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Oratoria · Entrenador conectado</title><link rel="stylesheet" href="/static/style.css"></head>
+<body><main>
+<header><div><p class="eyebrow">LABORATORIO IOT + IA</p><h1>Practica. Escucha.<br>Mejora tu exposición.</h1>
+<p class="intro">Graba una sesión, recibe consejos breves y conserva las evidencias para tu evaluación.</p></div>
+<div class="connection"><span id="connection" class="badge">Sin conectar</span><p id="device">ESP8266 · esperando conexión</p></div></header>
+<section class="access" aria-labelledby="accessTitle"><h2 id="accessTitle">Acceso al laboratorio</h2>
+<label for="token">Token local de acceso <small>(APP_TOKEN del archivo .env; no es tu clave de OpenAI)</small></label>
+<div class="inline"><input id="token" type="password" autocomplete="off" placeholder="Pega el token local"><button id="connect">Conectar</button></div>
+<p id="accessMessage" role="status">Tu clave de OpenAI permanece en la laptop.</p></section>
+<div id="demoBanner" class="notice" hidden>DEMOSTRACIÓN: el texto es simulado y no corresponde al reconocimiento de tu voz. No utilizar estos resultados en el paper.</div>
+<section class="session" aria-labelledby="sessionTitle"><div class="section-title"><h2 id="sessionTitle">Tu sesión</h2><span id="clock">00:00</span></div>
+<div class="form-grid"><label>Código del participante<input id="participant" value="P001" maxlength="32" pattern="[A-Za-z0-9_-]+" autocomplete="off"></label>
+<label>Etapa<select id="phase"><option value="practice">Práctica</option><option value="pre">Antes</option><option value="post">Después</option></select></label></div>
+<label class="check"><input id="feedback" type="checkbox" checked>Mostrar recomendaciones durante la sesión</label>
+<p class="caption">Al elegir Antes o Después, los consejos se desactivan por defecto para medir desempeño sin ayuda. Puedes activarlos si tu protocolo evalúa asistencia durante el discurso.</p>
+<label class="check"><input id="playAudio" type="checkbox">Escuchar a GPT-Live en el celular <small>(usa auriculares para evitar que se vuelva a grabar)</small></label>
+<label class="check consent"><input id="consent" type="checkbox">Acepto grabar y guardar esta sesión. En modo real, el audio se envía a OpenAI para su procesamiento.</label>
+<div class="buttons"><button id="start" disabled>Iniciar con GPT-Live</button><button id="demo" class="secondary" disabled>Probar sin micrófono ni API</button><button id="stop" class="danger" disabled>Finalizar y guardar</button></div>
+<p id="sessionMessage" role="status">Conecta el laboratorio para comenzar. El celular necesita HTTPS de confianza.</p></section>
+<section class="metrics" aria-label="Indicadores exploratorios">
+<article><span>Palabras</span><strong id="words">0</strong></article>
+<article><span>Candidatos a muletilla</span><strong id="fillers">0</strong></article>
+<article><span>Repeticiones candidatas</span><strong id="repetitions">0</strong></article>
+<article><span>Palabras / minuto</span><strong id="pace">—</strong></article></section>
+<p class="caption">Indicadores automáticos exploratorios. Las muletillas requieren revisión humana; los tiempos del texto son aproximados.</p>
+<div class="columns"><section class="panel"><div class="section-title"><h2>Transcripción</h2><span class="badge pale">Confirmada vía MQTT</span></div>
+<p id="transcript" class="transcript">Tu discurso aparecerá aquí.</p></section>
+<section class="panel"><h2>Consejos de tu entrenador</h2><p id="coach" class="coach">Recibirás mensajes breves durante las pausas del discurso.</p>
+<p id="relay" class="caption">La placa confirma cada fragmento de texto y cada recomendación.</p></section></div>
+<section class="panel"><div class="section-title"><h2>Sesiones guardadas</h2><button id="refresh" class="small secondary" disabled>Actualizar</button></div>
+<div id="history"><p class="caption">Conecta el laboratorio para consultar tus registros.</p></div></section>
+<section class="panel" aria-labelledby="comparisonTitle"><h2 id="comparisonTitle">Comparar Antes y Después</h2>
+<p class="caption">Elige un par del mismo participante. Los intentos incompletos no generan cambios comparables. Los resultados automáticos son candidatos, no fallos confirmados.</p>
+<label>Participante<select id="comparisonParticipant"><option value="">Selecciona un participante</option></select></label>
+<div class="form-grid"><label>Antes<select id="comparisonPre"></select></label><label>Después<select id="comparisonPost"></select></label></div>
+<label>Revisor para los resultados humanos<input id="comparisonReviewer" value="R001" maxlength="32"></label>
+<div class="buttons"><button id="compareSessions">Comparar</button><button id="downloadComparison" class="secondary" disabled>Descargar comparación JSON</button></div>
+<p id="comparisonStatus" role="status"></p><div id="comparisonResults"></div></section>
+<section id="review" class="panel" hidden><h2>Revisión de la sesión</h2><p id="reviewSummary"></p>
+<h3>Audio y calidad técnica</h3><div id="reviewAudio"></div><div id="reviewQuality"></div>
+<p class="caption">La latencia indicada mide la emisión de un evento en la laptop hasta el eco del ESP, con reintentos. No mide el tiempo desde que hablaste. Un dato ausente se muestra como «Sin datos».</p>
+<div class="inline"><label>Código del revisor<input id="reviewer" value="R001" maxlength="32"></label><button id="loadReviewer" class="secondary">Cargar revisión de este revisor</button></div>
+<p class="caption">Cada revisor conserva su propia evaluación. Guardar actualiza únicamente la revisión de este código. Escucha el original y revisa también las omisiones.</p>
+<h3>Candidatos automáticos</h3><div id="candidateList"></div>
+<h3>Añadir candidatos omitidos</h3><div id="missedList"></div><button id="addMissed" class="secondary">Añadir omisión</button>
+<label>Transcripción corregida por el revisor<textarea id="correctedTranscript" maxlength="100000" placeholder="Corrige el texto contrastándolo con el audio. Se usa para el denominador humano de palabras."></textarea></label>
+<button id="copyTranscript" class="secondary">Usar texto automático como borrador</button>
+<h3>Claridad y organización</h3><p class="caption">Rúbrica local exploratoria, no instrumento validado. 1 = criterio ausente o muy débil; 3 = parcial; 5 = consistente. Usa 2 o 4 para niveles intermedios. Deja «No evaluado» cuando no corresponda.</p><div id="rubricFields"></div>
+<label>Observaciones del revisor<textarea id="evaluationNote" maxlength="2000"></textarea></label>
+<label class="check"><input id="reviewComplete" type="checkbox">He escuchado el audio completo, revisado todos los candidatos y buscado omisiones; la transcripción está corregida.</label>
+<button id="saveEvaluation">Guardar revisión</button><p id="evaluationStatus" role="status"></p><div id="humanResults"></div>
+<details><summary>Anotaciones anteriores</summary><div id="legacyAnnotations"></div></details>
+<h3>Encuesta del participante</h3><p class="caption">Debe responderla el participante. Escala local de percepción, no diagnóstico ni prueba de eficacia. Guardar sustituye su respuesta de esta sesión.</p>
+<label>¿Cuánto te ayudaron los consejos?<select id="surveyUsefulness"><option value="">Sin responder</option><option value="1">1 · Nada</option><option value="2">2 · Poco</option><option value="3">3 · Moderadamente</option><option value="4">4 · Bastante</option><option value="5">5 · Mucho</option></select></label>
+<label>¿Cuánto te distrajeron mientras hablabas?<select id="surveyDistraction"><option value="">Sin responder</option><option value="1">1 · Nada</option><option value="2">2 · Poco</option><option value="3">3 · Moderadamente</option><option value="4">4 · Bastante</option><option value="5">5 · Mucho</option></select></label>
+<label>Comentario del participante<textarea id="surveyComment" maxlength="2000"></textarea></label><button id="saveSurvey" class="secondary">Guardar encuesta</button><p id="surveyStatus" role="status"></p>
+</section>
+<footer><p>Modelo solicitado: <strong>gpt-live-1</strong> · Audio PCM16 mono, 16 kHz · Servidor local y registros exportables.</p>
+<p>En esta fase el ESP8266 utiliza una pasarela en la laptop para la conexión segura con OpenAI.</p></footer>
+</main><script src="/static/app.js" defer></script><script src="/static/evaluation.js" defer></script></body></html>

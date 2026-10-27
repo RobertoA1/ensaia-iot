@@ -1,0 +1,30 @@
+name: oratoria-emqx
+services:
+  emqx:
+    image: emqx/emqx-enterprise:6.3.2
+    hostname: broker.oratoria.local
+    restart: unless-stopped
+    env_file:
+      - ./private/node.env
+    environment:
+      EMQX_NODE_NAME: emqx@broker.oratoria.local
+      EMQX_DASHBOARD__DEFAULT_USERNAME: admin
+      EMQX_DASHBOARD__DEFAULT_PASSWORD: ${EMQX_DASHBOARD_PASSWORD:?Ejecuta python -m tools.preparar_emqx}
+    ports:
+      - "${EMQX_MQTT_PORT:-1884}:1883"
+      - "127.0.0.1:18083:18083"
+    volumes:
+      - emqx_data:/opt/emqx/data
+      - emqx_log:/opt/emqx/log
+      - ./emqx.conf:/opt/emqx/etc/emqx.conf:ro
+      - ./private/users.csv:/opt/emqx/etc/oratoria-users.csv:ro
+      - ./private/acl.conf:/opt/emqx/etc/oratoria-acl.conf:ro
+    healthcheck:
+      test: [CMD, /opt/emqx/bin/emqx, ctl, status]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+volumes:
+  emqx_data:
+  emqx_log:

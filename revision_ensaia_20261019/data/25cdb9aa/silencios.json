@@ -1,0 +1,27 @@
+[
+  {
+    "start_ms": 0,
+    "end_ms": 900,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 5940,
+    "end_ms": 6780,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 27720,
+    "end_ms": 28640,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 42300,
+    "end_ms": 43360,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 53420,
+    "end_ms": 54523,
+    "origin": "rms_threshold_heuristic"
+  }
+]

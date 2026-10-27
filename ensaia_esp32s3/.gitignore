@@ -1,0 +1,7 @@
+__pycache__/
+.pytest_cache/
+*.bin
+*.elf
+*.map
+*.log
+config.personal.h
