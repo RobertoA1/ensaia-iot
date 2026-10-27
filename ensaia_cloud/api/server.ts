@@ -18,7 +18,7 @@ function sameOrigin(req:IncomingMessage){
 async function body(req:IncomingMessage){
   if(!String(req.headers['content-type']||'').startsWith('application/json'))throw new Error('Usa JSON');
   let total=0;const chunks:Buffer[]=[];
-  for await(const raw of req){const b=Buffer.from(raw);total+=b.length;if(total>4096)throw new Error('Solicitud demasiado grande');chunks.push(b);}
+  for await(const raw of req){const b=Buffer.from(raw);total+=b.length;if(total>131072)throw new Error('Solicitud demasiado grande');chunks.push(b);}
   return JSON.parse(Buffer.concat(chunks).toString()) as Record<string,unknown>;
 }
 export async function handler(req:IncomingMessage,res:ServerResponse){
@@ -76,6 +76,7 @@ export async function handler(req:IncomingMessage,res:ServerResponse){
       if(b.consent!==true){json(res,400,{error:'Confirma que aceptas grabar y procesar esta presentación'});return;}
       if(typeof b.title!=='string'||!b.title.trim()||b.title.length>120||!['pre','post','practice'].includes(String(b.phase))||
          !Number.isInteger(b.seconds)||Number(b.seconds)<15||Number(b.seconds)>180){json(res,400,{error:'Revisa el tema, la etapa y la duración (15 a 180 segundos)'});return;}
+      if(b.idealText!==undefined&&(typeof b.idealText!=='string'||b.idealText.length>20000)){json(res,400,{error:'El guion debe contener como máximo 20 000 caracteres'});return;}
       if(b.audience!==undefined&&(typeof b.audience!=='string'||b.audience.length>120)){json(res,400,{error:'Revisa la descripción del público'});return;}
       const device=await store.getPresence(owner.deviceId);
       if(!device?.online||Date.now()-device.at>12000){json(res,409,{error:'El ESP32 está desconectado. Enciéndelo y espera la conexión.'});return;}
@@ -84,7 +85,7 @@ export async function handler(req:IncomingMessage,res:ServerResponse){
       if(mode==='whisper'&&!await workerOnline(owner.deviceId)){json(res,409,{error:'Inicia Whisper en la laptop antes de grabar.'});return;}
       const id=randomBytes(8).toString('hex');
       if(!await store.setActive(owner.deviceId,id)){json(res,409,{error:'Ya hay una presentación activa'});return;}
-      const p:Presentation={id,username:owner.username,deviceId:owner.deviceId,title:b.title.trim(),audience:typeof b.audience==='string'?b.audience.trim():'',phase:b.phase as Presentation['phase'],
+      const p:Presentation={id,username:owner.username,deviceId:owner.deviceId,title:b.title.trim(),audience:typeof b.audience==='string'?b.audience.trim():'',idealText:typeof b.idealText==='string'?b.idealText.trim():'',phase:b.phase as Presentation['phase'],
         feedback:b.feedback!==false,mode,status:'pending',createdAt:iso(),durationLimit:Number(b.seconds),transcript:'',advice:'',summary:'',
         metrics:new SpeechMeter().metrics(''),events:[],providerFinalized:false,sourceComplete:false};
       try{await store.saveLive(p);await store.checkpoint(p);await store.sendCommand(owner.deviceId,{id:randomUUID(),op:'start',sid:id});}

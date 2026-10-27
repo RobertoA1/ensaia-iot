@@ -1,8 +1,9 @@
 import {randomUUID} from 'node:crypto';
 import WebSocket from 'ws';
 import {LiveCoach, type ProviderEvent} from './live.js';
+import {LiveAdviceBuffer} from './live-advice.js';
 import {WhisperCoach} from './whisper-coach.js';
-import {evaluateTranscript} from './assessment.js';
+import {evaluateTranscript,attachEvidenceRanges} from './assessment.js';
 import {SpeechMeter, parseAudio, fallbackSummary, wav} from './metrics.js';
 import {validDeviceId, validUsername, verifyDevice} from './security.js';
 import * as store from './store.js';
@@ -17,7 +18,7 @@ export class DeviceConnection {
   private active?:Presentation; private meter?:SpeechMeter; private chunks:Buffer[]=[];
   private coach?:Coach; private peak=0; private rssi=-100; private lastFlush=0; private lastCheckpoint=0;
   private summaryMode=false; private lastSummary=0; private lastCue=0;
-  private lastAssessment=0; private assessmentJob?:Promise<void>;
+  private lastAssessment=0; private assessmentJob?:Promise<void>; private liveAdvice?:LiveAdviceBuffer;
   private captureEnded?:()=>void; private stopExpected?:number; private captureError?:string;
   private finishing?:Promise<void>;
   private authTimer:ReturnType<typeof setTimeout>; private timer:ReturnType<typeof setInterval>;
@@ -33,11 +34,11 @@ export class DeviceConnection {
     socket.on('error',()=>void this.fail('Se interrumpió la conexión con el dispositivo'));
   }
   private send(value:unknown){if(this.socket.readyState===WebSocket.OPEN)this.socket.send(JSON.stringify(value));}
-  private log(kind:SpeechEvent['kind'],text:string) {
+  private log(kind:SpeechEvent['kind'],text:string,timing?:Pick<SpeechEvent,'startMs'|'endMs'|'rangeSource'>) {
     const p=this.active;if(!p||!text)return;
     const last=p.events.at(-1),at=iso();
-    if(last?.kind===kind&&Date.now()-Date.parse(last.at)<1200&&kind!=='system'&&kind!=='error')last.text+=text;
-    else p.events.push({id:p.events.length,kind,text,at,audioMs:Math.round((this.meter?.samples??0)/16)});
+    if(!timing&&last?.kind===kind&&Date.now()-Date.parse(last.at)<1200&&kind!=='system'&&kind!=='error')last.text+=text;
+    else p.events.push({id:p.events.length,kind,text,at,audioMs:Math.round((this.meter?.samples??0)/16),...timing});
   }
   private async receive(data:Buffer,binary:boolean) {
     if(this.dead||this.disconnected)return;
@@ -103,6 +104,7 @@ export class DeviceConnection {
     const p=await store.getPresentation(this.owner.username,sid);if(!p||p.status!=='pending')return;
     this.active=p;this.meter=new SpeechMeter();this.chunks=[];this.stopExpected=undefined;
     this.captureError=undefined;this.summaryMode=false;this.lastSummary=0;this.lastCue=0;this.lastAssessment=0;this.assessmentJob=undefined;
+    this.liveAdvice=new LiveAdviceBuffer(text=>{if(this.active?.id===p.id&&p.feedback){p.advice+=text+' ';this.log('advice',text);this.send({type:'feedback',text:text.slice(0,700)});}});
     p.status='starting';this.log('system','Preparando la conexión de IA');await this.flush();
     const onEvent=(e:ProviderEvent)=>this.providerEvent(e);
     const onError=(message:string)=>{if(!this.closing)void this.fail(message);};
@@ -118,7 +120,7 @@ export class DeviceConnection {
   private providerEvent(e:ProviderEvent){
     const p=this.active;if(!p||this.dead)return;
     if(e.type==='session.input_transcript.delta'&&typeof e.delta==='string'){
-      p.transcript+=e.delta;this.log('transcript',e.delta);
+      p.transcript+=e.delta;const validTiming=typeof e.start_ms==='number'&&typeof e.end_ms==='number'&&e.start_ms>=0&&e.end_ms>=e.start_ms;this.log('transcript',e.delta,validTiming?{startMs:e.start_ms as number,endMs:e.end_ms as number,rangeSource:p.mode==='whisper'?'block':'provider'}:undefined);
       if(p.transcript.length>100000){void this.fail('La transcripción superó el límite de esta toma');return;}
       if(p.feedback&&!this.closing&&Date.now()-this.lastAssessment>30000&&p.transcript.trim().split(/\s+/).length>=35)void this.assess(p);
       if(p.feedback&&!this.closing&&Date.now()-this.lastCue>7000&&p.transcript.trim().split(/\s+/).length>=15){
@@ -126,7 +128,7 @@ export class DeviceConnection {
       }
     }else if(e.type==='session.output_transcript.delta'&&typeof e.delta==='string'){
       if(this.summaryMode){p.summary+=e.delta;this.lastSummary=Date.now();}
-      else if(p.feedback){p.advice+=e.delta;this.log('advice',e.delta);this.send({type:'feedback',text:e.delta.slice(0,700)});}
+      else if(p.feedback){if(p.mode==='live')this.liveAdvice?.push(e.delta);else{p.advice+=e.delta;this.log('advice',e.delta);this.send({type:'feedback',text:e.delta.slice(0,700)});}}
     }else if(e.type==='session.closed')p.providerFinalized=true;
   }
   private async assess(p:Presentation,final=false){
@@ -136,11 +138,11 @@ export class DeviceConnection {
     const transcript=p.transcript, seconds=this.meter?.metrics(transcript).seconds??0;
     const job=(async()=>{
       try{
-        const result=await this.evaluate(transcript,seconds,final,p.audience||'');
+        const result=await this.evaluate(transcript,seconds,final,p.audience||'',p.idealText||'');
         if(this.active?.id!==p.id)return;
         if(!result){if(transcript.trim().split(/\s+/).length>=35)p.assessmentError='No se pudo obtener una evaluación válida de la IA.';return;}
         p.assessmentError=undefined;
-        (p.assessments??=[]).push(result);
+        (p.assessments??=[]).push(attachEvidenceRanges(result,p.events));
         if(!final&&p.feedback&&result.next&&!this.closing){this.log('advice',result.next);p.advice+=result.next+' ';}
       }catch{if(this.active?.id===p.id)p.assessmentError='No se pudo obtener la evaluación de IA. Revisa la conexión y el acceso al proveedor.';}
     })();
@@ -195,8 +197,9 @@ export class DeviceConnection {
     if(this.coach?.ready&&!this.coach.failed){
       // Dejar llegar los últimos deltas antes de solicitar un resumen separado del feedback.
       await new Promise(r=>setTimeout(r,500));
+      this.liveAdvice?.flush();
       this.summaryMode=true;
-      this.coach.summarize(JSON.stringify({metrics:this.meter?.metrics(p.transcript),audioComplete:p.sourceComplete}));
+      this.coach.summarize(JSON.stringify({metrics:this.meter?.metrics(p.transcript),audioComplete:p.sourceComplete,guion:p.idealText||''}));
       try{this.coach.audio(Buffer.alloc(16000));}catch{}
       const limit=Date.now()+12000;
       while(Date.now()<limit&&(!p.summary||Date.now()-this.lastSummary<1500))await new Promise(r=>setTimeout(r,100));
@@ -217,6 +220,7 @@ export class DeviceConnection {
     catch{p.archived=false;p.error=(p.error?p.error+'. ':'')+'No se confirmó el respaldo permanente. Exporta los registros disponibles.';await store.saveLive(p).catch(()=>{});}
     await store.clearActive(p.deviceId,p.id).catch(()=>{});
     this.send({type:'session.ended',sid:p.id,status:p.status});
+    this.liveAdvice?.discard();this.liveAdvice=undefined;
     this.active=undefined;this.meter=undefined;this.coach=undefined;this.chunks=[];
     this.closing=false;this.archiving=false;this.born=Date.now();
   }

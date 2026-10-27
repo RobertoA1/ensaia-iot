@@ -140,3 +140,36 @@ test('la evidencia numerada proviene literalmente de la transcripción y rechaza
   const invalid=JSON.stringify({clarity:item(999),organization:item(1),development:item(1)});
   assert.equal(parseAssessment(invalid,transcript,30,fragments)!.total,null);
 });
+
+test('los fragmentos de GPT-Live forman un consejo y se descartan confirmaciones aisladas',async()=>{
+  const {LiveAdviceBuffer}=await import('../lib/live-advice.js');const items:string[]=[];
+  const buf=new LiveAdviceBuffer(x=>items.push(x),20);
+  buf.push(' ¿Pod');buf.push('rías decirlo');buf.push(' en español?');
+  await new Promise(r=>setTimeout(r,40));assert.deepEqual(items,['¿Podrías decirlo en español?']);
+  buf.push(' Mm-hmm.');buf.flush();buf.push(' Claro.');buf.flush();assert.equal(items.length,1);
+  buf.push(' Separa');buf.push(' las ideas.');buf.flush();assert.equal(items[1],'Separa las ideas.');
+  buf.push('descartado');buf.discard();await new Promise(r=>setTimeout(r,40));assert.equal(items.length,2);
+});
+
+test('el consejo de rúbrica solo se emite cuando referencia un fragmento válido',async()=>{
+  const {evidenceFragments,parseAssessment}=await import('../lib/assessment.js');
+  const transcript='La fragmentación separa las frases y dificulta entender el mensaje para toda la audiencia.';
+  const fragments=evidenceFragments(transcript);const d={score:70,evidence_id:0,suggestion:'Define el término.'};
+  const raw=(id:number|null)=>JSON.stringify({clarity:d,organization:d,development:d,next:'Explica «fragmentación» con un ejemplo sencillo.',next_evidence_id:id});
+  assert.match(parseAssessment(raw(0),transcript,15,fragments)!.next,/fragmentación/);
+  assert.equal(parseAssessment(raw(999),transcript,15,fragments)!.next,'');
+  assert.equal(parseAssessment(raw(null),transcript,15,fragments)!.next,'');
+});
+
+test('los intervalos de evidencia se construyen con los fragmentos de audio y no con la hora de llegada',async()=>{
+ const {attachEvidenceRanges}=await import('../lib/assessment.js');
+ const d=(evidence:string)=>({score:70,evidence,suggestion:'Revisar'});
+ const assessment={seconds:10,at:new Date().toISOString(),total:70,dimensions:{clarity:d('frase clara'),organization:d('siguiente idea'),development:d('sin tiempos')},complexity:'',next:''};
+ const events=[{id:0,at:new Date().toISOString(),kind:'transcript' as const,text:'Una frase clara ',startMs:4000,endMs:8000,rangeSource:'block' as const},
+ {id:1,at:new Date().toISOString(),kind:'transcript' as const,text:'y la siguiente idea ',startMs:8000,endMs:10000,rangeSource:'block' as const},
+ {id:2,at:new Date().toISOString(),kind:'transcript' as const,text:'sin tiempos',audioMs:16000}];
+ const result=attachEvidenceRanges(assessment,events);
+ assert.equal(result.dimensions.clarity.startMs,4000);assert.equal(result.dimensions.clarity.endMs,8000);
+ assert.equal(result.dimensions.organization.startMs,8000);assert.equal(result.dimensions.organization.endMs,10000);
+ assert.equal(result.dimensions.development.startMs,undefined);
+});

@@ -29,7 +29,8 @@ export class WhisperWorker {
     if(msg.type==='worker.ping')return;
     if(!['transcript','ended','error'].includes(msg.type)||typeof msg.sid!=='string'||!/^[a-f0-9]{16}$/.test(msg.sid))return;
     if(await store.activeSid(this.id)!==msg.sid)return;
-    const data={type:msg.type,sid:msg.sid,text:typeof msg.text==='string'?msg.text.slice(0,2000):''};
+    const validRange=Number.isInteger(msg.start_ms)&&Number.isInteger(msg.end_ms)&&msg.start_ms>=0&&msg.end_ms>=msg.start_ms&&msg.end_ms<=180000;
+    const data={type:msg.type,sid:msg.sid,text:typeof msg.text==='string'?msg.text.slice(0,2000):'',...(validRange?{start_ms:msg.start_ms,end_ms:msg.end_ms}:{})};
     const r=await store.db();await r.publish(store.key('whisper:result:'+this.id),seal(JSON.stringify(data),'whisper:result:'+this.id));
   }
   private async presence(){const r=await store.db();await r.set(store.key('worker:presence:'+this.id),'1',{EX:16});}
