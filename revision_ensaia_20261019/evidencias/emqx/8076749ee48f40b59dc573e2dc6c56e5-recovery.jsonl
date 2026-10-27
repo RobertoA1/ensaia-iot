@@ -1,1 +1,0 @@
-{"execution": "8076749ee48f40b59dc573e2dc6c56e5", "passed": true, "before_received": true, "cut_observed": true, "after_received": true, "lost_during_cut": "No cuantificable; no se publicaron mensajes durante el corte (QoS 0)", "duplicate_after_restart": false, "disconnects": 10}
