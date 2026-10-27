@@ -64,12 +64,17 @@ export async function enroll(deviceId:string,username:string,password:string) {
   }
 }
 export async function createLogin(username:string) {
-  const token=randomToken();const r=await db();
-  await r.set(key(`login:${hash(token)}`),seal(username,`login:${hash(token)}`),{EX:28800});return token;
+  const token=randomToken();const r=await db();const owner=await account(username);
+  if(!owner)throw new Error('Cuenta no disponible');
+  const payload=JSON.stringify({username,authVersion:owner.authVersion||''});
+  await r.set(key(`login:${hash(token)}`),seal(payload,`login:${hash(token)}`),{EX:28800});return token;
 }
 export async function loginOwner(token:string) {
   if(!/^[a-f0-9]{64}$/.test(token))return null;
-  const r=await db();const value=await r.get(key(`login:${hash(token)}`));return value?unseal(value,`login:${hash(token)}`):null;
+  const r=await db();const value=await r.get(key(`login:${hash(token)}`));if(!value)return null;
+  const raw=unseal(value,`login:${hash(token)}`);let username='',version='';
+  try{const session=JSON.parse(raw);if(!session||typeof session.username!=='string'||typeof session.authVersion!=='string')return null;username=session.username;version=session.authVersion;}catch{username=raw;}
+  const owner=await account(username);return owner&&(owner.authVersion||'')===version?username:null;
 }
 export async function logout(token:string){const r=await db();await r.del(key(`login:${hash(token)}`));}
 export async function presence(value:Presence){const r=await db();await r.set(key(`presence:${value.deviceId}`),seal(JSON.stringify(value),`presence:${value.deviceId}`),{EX:20});}
