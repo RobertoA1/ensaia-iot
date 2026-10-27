@@ -39,30 +39,30 @@ async def serve(model, cfg):
                         await asyncio.sleep(5); await sender({'type':'worker.ping'})
                 async def process():
                     while True:
-                        sid, pcm, end = await queue.get()
+                        sid, pcm, end, start_ms = await queue.get()
                         try:
                             if pcm:
                                 text = await asyncio.to_thread(transcribe, model, pcm)
-                                if text: await sender({'type':'transcript','sid':sid,'text':text})
+                                if text: await sender({'type':'transcript','sid':sid,'text':text,'start_ms':start_ms,'end_ms':start_ms+len(pcm)//32})
                             if end: await sender({'type':'ended','sid':sid})
                         except Exception:
                             await sender({'type':'error','sid':sid,'text':'Error de transcripción local'})
                         queue.task_done()
                 ping = asyncio.create_task(heartbeat()); processor = asyncio.create_task(process())
-                sid = ''; expected = 0; buf = bytearray()
+                sid = ''; expected = 0; buf = bytearray(); sample_offset = 0
                 try:
                     async for raw in ws:
                         m = json.loads(raw); kind = m.get('type')
                         if kind == 'start':
-                            sid=m['sid']; expected=0; buf.clear(); print('Transcripción iniciada.',flush=True)
+                            sid=m['sid']; expected=0; sample_offset=0; buf.clear(); print('Transcripción iniciada.',flush=True)
                         elif kind == 'audio' and sid and m.get('sid')==sid:
                             if m.get('seq') != expected: raise RuntimeError('Se perdió un fragmento de audio')
                             expected+=1;buf.extend(base64.b64decode(m['audio'],validate=True))
                             if len(buf)>=128000:
-                                await asyncio.wait_for(queue.put((sid,bytes(buf),False)),2);buf.clear()
+                                await asyncio.wait_for(queue.put((sid,bytes(buf),False,sample_offset)),2);sample_offset+=len(buf)//32;buf.clear()
                         elif kind == 'end' and sid and m.get('sid')==sid:
                             if m.get('seq') != expected: raise RuntimeError('Faltan fragmentos al finalizar')
-                            await asyncio.wait_for(queue.put((sid,bytes(buf),True)),2);buf.clear();sid=''
+                            await asyncio.wait_for(queue.put((sid,bytes(buf),True,sample_offset)),2);buf.clear();sid=''
                 finally:
                     ping.cancel();processor.cancel()
                     await asyncio.gather(ping,processor,return_exceptions=True)

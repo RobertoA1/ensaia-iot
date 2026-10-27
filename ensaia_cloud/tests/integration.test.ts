@@ -30,8 +30,8 @@ test('dispositivo autorizado → usuario → web → grabación → log → arch
   process.env.REDIS_PREFIX=`ensaia:qa:${suffix}`;process.env.DEVICE_SECRETS=JSON.stringify({[deviceId]:hash(secret)});
   const server=http.createServer((req,res)=>void handler(req,res));
   const wss=new WebSocketServer({server,maxPayload:4096});
-  const assessmentCalls:{final:boolean}[]=[];let assessmentFail=false;
-  wss.on('connection',ws=>new DeviceConnection(ws,event=>new FakeCoach(event),async(_text,seconds,final=false)=>{assessmentCalls.push({final});if(assessmentFail)throw new Error('fallo simulado');return ({seconds,at:new Date().toISOString(),total:80,dimensions:{clarity:{score:80,evidence:'Buenos días',suggestion:'Define la idea'},organization:{score:80,evidence:'Organizar',suggestion:'Ordena'},development:{score:80,evidence:'Por ejemplo',suggestion:'Ejemplifica'}},complexity:'Explica el término',next:'Añade un ejemplo.'});}));
+  const assessmentCalls:{final:boolean;ideal:string}[]=[];let assessmentFail=false;
+  wss.on('connection',ws=>new DeviceConnection(ws,event=>new FakeCoach(event),async(_text,seconds,final=false,_audience='',ideal='')=>{assessmentCalls.push({final,ideal});if(assessmentFail)throw new Error('fallo simulado');return ({seconds,at:new Date().toISOString(),total:80,dimensions:{clarity:{score:80,evidence:'Buenos días',suggestion:'Define la idea'},organization:{score:80,evidence:'Organizar',suggestion:'Ordena'},development:{score:80,evidence:'Por ejemplo',suggestion:'Ejemplifica'}},complexity:'Explica el término',next:'Añade un ejemplo.'});}));
   await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));
   const base=`http://127.0.0.1:${(server.address() as any).port}`;
   const connect=async()=>{const ws=new WebSocket(base.replace('http','ws')+'/api/server?role=device');await new Promise<void>(r=>ws.once('open',r));return ws;};
@@ -62,14 +62,14 @@ test('dispositivo autorizado → usuario → web → grabación → log → arch
     const anonymous=await request('start','POST',{title:'QA',phase:'practice',seconds:15,consent:true});assert.equal(anonymous.status,401);
     const csrf=await fetch(base+'/api/server?action=start',{method:'POST',headers:{Origin:'https://otro.example','Content-Type':'application/json',Cookie:cookie},body:'{}'});assert.equal(csrf.status,403);
     const denied=await request('start','POST',{title:'QA',phase:'practice',seconds:15,consent:false},cookie);assert.equal(denied.status,400);
-    const start=await request('start','POST',{title:'Prueba técnica sintética — no es participante humano',phase:'practice',seconds:15,consent:true,feedback:true},cookie);
+    const start=await request('start','POST',{title:'Prueba técnica sintética — no es participante humano',phase:'practice',seconds:15,consent:true,feedback:true,idealText:'Guion de prueba con ideas de referencia'},cookie);
     assert.equal(start.status,201);const created=await start.json();
     await until(async()=>frames,n=>n>=25);
     const stop=await request('stop','POST',{id:created.id},cookie);assert.equal(stop.status,202);
     const result=await until(async()=>{const r=await request('presentation&id='+created.id,'GET',undefined,cookie);return r.json();},p=>['completed','interrupted','error'].includes(p.status));
     assert.equal(result.status,'completed');assert.equal(result.sourceComplete,true);assert.equal(result.providerFinalized,true);assert.equal(result.archived,true);
     assert.equal(result.metrics.frames,frames);assert.equal(result.expectedFrames,frames);assert.match(result.transcript,/Buenos días/);assert.match(result.summary,/PROVEEDOR SIMULADO/);
-    assert.ok(result.assessments.length>=1);assert.equal(result.assessments.at(-1).total,80);
+    assert.ok(result.assessments.length>=1);assert.equal(result.assessments.at(-1).total,80);assert.equal(result.idealText,'Guion de prueba con ideas de referencia');assert.ok(assessmentCalls.some(call=>call.ideal===result.idealText));
     const history=await until(async()=>{const response=await request('history','GET',undefined,cookie);return response.json();},x=>x.sessions.some((v:any)=>v.id===created.id));
     assert.equal(history.sessions.find((v:any)=>v.id===created.id).score,80);
     assert.ok(result.events.some((x:any)=>x.kind==='advice'));assert.ok(result.events.some((x:any)=>x.kind==='transcript'));

@@ -105,7 +105,7 @@ export async function history(username:string) {
   const result=await list({prefix:`sessions/${username}/`,limit:100,token:process.env.BLOB_READ_WRITE_TOKEN});
   const records=await Promise.all(result.blobs.map(x=>readJSON<Presentation>(x.pathname)));
   return records.filter((x):x is Presentation=>Boolean(x)).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,30)
-    .map(({id,title,createdAt,phase,status,metrics,sourceComplete,assessments,assessmentError,mode})=>({id,title,createdAt,phase,status,metrics,sourceComplete,mode,score:assessmentError?null:(assessments?.at(-1)?.total??null)}));
+    .map(({id,title,createdAt,phase,status,metrics,sourceComplete,assessments,assessmentError,mode})=>({id,title,createdAt,phase,status,metrics,sourceComplete,mode,scoreSource:assessments?.at(-1)?.source,score:assessmentError?null:(assessments?.at(-1)?.total??null)}));
 }
 export async function audioFile(username:string,sid:string) {
   return get(`audio/${username}/${sid}.wav`,blobOptions());
