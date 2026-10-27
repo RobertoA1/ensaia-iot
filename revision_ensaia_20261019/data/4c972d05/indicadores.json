@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "filled_pause_candidate": 0,
+    "contextual_filler_candidate": 1,
+    "repetition_candidate": 2,
+    "words": 34,
+    "captured_audio_seconds": 26.669,
+    "words_per_minute": 76.49,
+    "candidate_fillers_per_minute": 2.25,
+    "silences_over_800ms": 12,
+    "clipped_sample_ratio": 0.0,
+    "measurement_status": "exploratory_not_human_validated"
+  },
+  "capture_started_at": "2026-10-18T20:06:06.920+00:00",
+  "capture_ended_at": "2026-10-18T20:06:33.594+00:00",
+  "audio_duration_ms": 26669,
+  "session_wall_duration_ms": 32516,
+  "original_frames": 1334,
+  "relay_frames": 1334,
+  "relay_missing_frames": 0,
+  "relay_duplicates": 0,
+  "audio_relay_complete": true,
+  "provider_finalization_confirmed": true,
+  "reason": "user",
+  "demo": false,
+  "device_simulated": false,
+  "browser_expected_frames": 1334,
+  "mqtt_internal_drops": 0,
+  "measurement_status": "requires_human_audio_review",
+  "device_status_at_close": {
+    "online": true,
+    "simulated": false,
+    "sid": "",
+    "uptime_ms": 1033787,
+    "free_heap": 42008,
+    "firmware": "relay-q0-v3",
+    "short_writes": 0,
+    "frames_forwarded": 1334,
+    "failed_publishes": 0
+  },
+  "device_diagnostics": {
+    "min_free_heap": 38760,
+    "min_wifi_rssi": null,
+    "observed_disconnects": 0,
+    "short_writes_during_session": 0
+  },
+  "provider_audio_sent_bytes": 853418,
+  "provider_audio_complete": true,
+  "provider_send_error": null,
+  "pending_device_events": 0
+}

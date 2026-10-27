@@ -1,0 +1,11 @@
+.private
+.env*
+firmware
+tests
+scripts
+*.log
+Context.md
+README.md
+
+.venv-whisper
+whisper_local

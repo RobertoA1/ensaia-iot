@@ -1,0 +1,40 @@
+{
+  "metrics": {
+    "filled_pause_candidate": 0,
+    "contextual_filler_candidate": 0,
+    "repetition_candidate": 3,
+    "words": 18,
+    "captured_audio_seconds": 70.464,
+    "words_per_minute": 15.33,
+    "candidate_fillers_per_minute": 0.0,
+    "silences_over_800ms": 10,
+    "clipped_sample_ratio": 0.0,
+    "measurement_status": "exploratory_not_human_validated"
+  },
+  "capture_started_at": "2026-10-17T16:25:02.440+00:00",
+  "capture_ended_at": "2026-10-17T16:26:12.938+00:00",
+  "audio_duration_ms": 70464,
+  "session_wall_duration_ms": 79984,
+  "original_frames": 3524,
+  "relay_frames": 2657,
+  "relay_missing_frames": 867,
+  "relay_duplicates": 0,
+  "audio_relay_complete": false,
+  "provider_finalization_confirmed": true,
+  "reason": "user",
+  "demo": false,
+  "device_simulated": false,
+  "browser_expected_frames": 3524,
+  "mqtt_internal_drops": 0,
+  "measurement_status": "requires_human_audio_review",
+  "device_status_at_close": {
+    "online": true,
+    "simulated": false,
+    "sid": "c0938476",
+    "uptime_ms": 136702,
+    "free_heap": 38576,
+    "frames_forwarded": 2647,
+    "failed_publishes": 0
+  },
+  "pending_device_events": 48
+}

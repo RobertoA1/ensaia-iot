@@ -1,0 +1,1 @@
+ Hola, hola... probando 1 2 3... funcionando en este dashboard... vamos a validar... las métricas... no hay nada raro... lo cerró el view Hola... throughput messages... SQS in... vamos a finalizar y guardar esa información nada mas

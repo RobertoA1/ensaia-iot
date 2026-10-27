@@ -1,0 +1,1 @@
+{"execution": "caa93a0f9c8e4d3d91e3f4abee0627ce", "wrong_password": {"passed": true, "reason": "Rechazo explicito del broker"}, "anonymous": {"passed": true, "reason": "Rechazo explicito del broker"}, "forbidden_subscription": true, "forbidden_publish": true, "passed": true, "note": "Requiere MQTT 5, denegacion explicita de ACL y ausencia de reglas generales allow."}

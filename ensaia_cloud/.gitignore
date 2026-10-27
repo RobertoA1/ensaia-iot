@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vercel/
+.env*
+!.env.example
+.private/
+firmware/ENSAIA_Cloud/secrets.h
+*.log
+coverage/
+
+.venv-whisper/
+
+whisper_local/voices/
+whisper_local/__pycache__/

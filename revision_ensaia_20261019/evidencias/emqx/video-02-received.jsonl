@@ -1,0 +1,46 @@
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:40.903062+00:00", "payload": {"ejecucion": "video-02", "secuencia": 1, "texto": "Prueba MQTT del entrenador 1"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:41.098093+00:00", "payload": {"ejecucion": "video-02", "secuencia": 2, "texto": "Prueba MQTT del entrenador 2"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:41.307236+00:00", "payload": {"ejecucion": "video-02", "secuencia": 3, "texto": "Prueba MQTT del entrenador 3"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:41.506702+00:00", "payload": {"ejecucion": "video-02", "secuencia": 4, "texto": "Prueba MQTT del entrenador 4"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:41.713324+00:00", "payload": {"ejecucion": "video-02", "secuencia": 5, "texto": "Prueba MQTT del entrenador 5"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:41.922453+00:00", "payload": {"ejecucion": "video-02", "secuencia": 6, "texto": "Prueba MQTT del entrenador 6"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:42.121826+00:00", "payload": {"ejecucion": "video-02", "secuencia": 7, "texto": "Prueba MQTT del entrenador 7"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:42.320936+00:00", "payload": {"ejecucion": "video-02", "secuencia": 8, "texto": "Prueba MQTT del entrenador 8"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:42.526304+00:00", "payload": {"ejecucion": "video-02", "secuencia": 9, "texto": "Prueba MQTT del entrenador 9"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:31:42.727641+00:00", "payload": {"ejecucion": "video-02", "secuencia": 10, "texto": "Prueba MQTT del entrenador 10"}}
+{"type": "summary", "ejecucion": "video-02", "received": 10, "missing": [], "duplicates": 0, "errors": 0, "disconnects": 0, "dropped": 0}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:45.274011+00:00", "payload": {"ejecucion": "video-02", "secuencia": 1, "texto": "Prueba MQTT del entrenador 1"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:45.472159+00:00", "payload": {"ejecucion": "video-02", "secuencia": 2, "texto": "Prueba MQTT del entrenador 2"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:45.691907+00:00", "payload": {"ejecucion": "video-02", "secuencia": 3, "texto": "Prueba MQTT del entrenador 3"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:45.886168+00:00", "payload": {"ejecucion": "video-02", "secuencia": 4, "texto": "Prueba MQTT del entrenador 4"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:46.089930+00:00", "payload": {"ejecucion": "video-02", "secuencia": 5, "texto": "Prueba MQTT del entrenador 5"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:46.282397+00:00", "payload": {"ejecucion": "video-02", "secuencia": 6, "texto": "Prueba MQTT del entrenador 6"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:46.485182+00:00", "payload": {"ejecucion": "video-02", "secuencia": 7, "texto": "Prueba MQTT del entrenador 7"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:46.691525+00:00", "payload": {"ejecucion": "video-02", "secuencia": 8, "texto": "Prueba MQTT del entrenador 8"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:46.892621+00:00", "payload": {"ejecucion": "video-02", "secuencia": 9, "texto": "Prueba MQTT del entrenador 9"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:32:47.095839+00:00", "payload": {"ejecucion": "video-02", "secuencia": 10, "texto": "Prueba MQTT del entrenador 10"}}
+{"type": "summary", "ejecucion": "video-02", "received": 10, "missing": [], "duplicates": 0, "errors": 0, "disconnects": 0, "dropped": 0}
+{"type": "summary", "ejecucion": "video-02", "received": 0, "missing": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "duplicates": 0, "errors": 0, "disconnects": 0, "dropped": 0}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:53.376706+00:00", "payload": {"ejecucion": "video-02", "secuencia": 1, "texto": "Prueba MQTT del entrenador 1"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:53.579706+00:00", "payload": {"ejecucion": "video-02", "secuencia": 2, "texto": "Prueba MQTT del entrenador 2"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:53.780591+00:00", "payload": {"ejecucion": "video-02", "secuencia": 3, "texto": "Prueba MQTT del entrenador 3"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:53.982979+00:00", "payload": {"ejecucion": "video-02", "secuencia": 4, "texto": "Prueba MQTT del entrenador 4"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:54.185548+00:00", "payload": {"ejecucion": "video-02", "secuencia": 5, "texto": "Prueba MQTT del entrenador 5"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:54.387825+00:00", "payload": {"ejecucion": "video-02", "secuencia": 6, "texto": "Prueba MQTT del entrenador 6"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:54.589066+00:00", "payload": {"ejecucion": "video-02", "secuencia": 7, "texto": "Prueba MQTT del entrenador 7"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:54.789152+00:00", "payload": {"ejecucion": "video-02", "secuencia": 8, "texto": "Prueba MQTT del entrenador 8"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:54.997483+00:00", "payload": {"ejecucion": "video-02", "secuencia": 9, "texto": "Prueba MQTT del entrenador 9"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:46:55.201023+00:00", "payload": {"ejecucion": "video-02", "secuencia": 10, "texto": "Prueba MQTT del entrenador 10"}}
+{"type": "summary", "ejecucion": "video-02", "received": 10, "missing": [], "duplicates": 0, "errors": 0, "disconnects": 0, "dropped": 0}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:55.843482+00:00", "payload": {"ejecucion": "video-02", "secuencia": 1, "texto": "Prueba MQTT del entrenador 1"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:56.047612+00:00", "payload": {"ejecucion": "video-02", "secuencia": 2, "texto": "Prueba MQTT del entrenador 2"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:56.249756+00:00", "payload": {"ejecucion": "video-02", "secuencia": 3, "texto": "Prueba MQTT del entrenador 3"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:56.451680+00:00", "payload": {"ejecucion": "video-02", "secuencia": 4, "texto": "Prueba MQTT del entrenador 4"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:56.654008+00:00", "payload": {"ejecucion": "video-02", "secuencia": 5, "texto": "Prueba MQTT del entrenador 5"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:56.854790+00:00", "payload": {"ejecucion": "video-02", "secuencia": 6, "texto": "Prueba MQTT del entrenador 6"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:57.058338+00:00", "payload": {"ejecucion": "video-02", "secuencia": 7, "texto": "Prueba MQTT del entrenador 7"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:57.259415+00:00", "payload": {"ejecucion": "video-02", "secuencia": 8, "texto": "Prueba MQTT del entrenador 8"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:57.463719+00:00", "payload": {"ejecucion": "video-02", "secuencia": 9, "texto": "Prueba MQTT del entrenador 9"}}
+{"topic": "laboratorio/oratoria/prueba", "retained": false, "received_at": "2026-10-19T01:51:57.664261+00:00", "payload": {"ejecucion": "video-02", "secuencia": 10, "texto": "Prueba MQTT del entrenador 10"}}
+{"type": "summary", "ejecucion": "video-02", "received": 10, "missing": [], "duplicates": 0, "errors": 0, "disconnects": 0, "dropped": 0}
+{"type": "summary", "ejecucion": "video-02", "received": 0, "missing": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "duplicates": 0, "errors": 0, "disconnects": 0, "dropped": 0}

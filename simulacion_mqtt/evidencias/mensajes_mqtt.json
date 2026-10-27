@@ -1,0 +1,1257 @@
+[
+  {
+    "topic": "unt/posgrado/aula01/zona2/estado",
+    "payload": {
+      "estado": "online",
+      "nodo_id": "esp32-z2",
+      "simulado": true
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/estado",
+    "payload": {
+      "estado": "online",
+      "nodo_id": "esp32-z1",
+      "simulado": true
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/0",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.535+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/0",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.576+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/1",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.585+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/1",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.627+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/2",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.636+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/2",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.678+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/3",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.687+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/3",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.728+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/4",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.737+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/4",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.780+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/5",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.788+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/5",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.830+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/6",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.839+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/6",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.881+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/7",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.890+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/7",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.932+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/8",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.941+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/8",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.982+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/9",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:27.991+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/9",
+      "zona_id": "zona2",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.033+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/10",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.042+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/10",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.084+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/11",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.093+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/11",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.134+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/12",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.144+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/12",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.185+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/13",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.194+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/13",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.237+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/14",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.245+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/14",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.286+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/15",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.295+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/15",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.338+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/16",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.346+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/16",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.388+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/17",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.397+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/17",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.439+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/18",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.448+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/18",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.491+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/19",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.499+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/19",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.541+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/20",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.550+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/20",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.592+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/21",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.600+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/21",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.642+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/22",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.651+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/22",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.693+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/23",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.702+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/23",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.744+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/24",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.753+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/24",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.796+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/25",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.804+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/25",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.846+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/26",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.855+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/26",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.897+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/27",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.906+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/27",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.948+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/28",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.956+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/28",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:28.998+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/29",
+      "zona_id": "zona2",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.007+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/29",
+      "zona_id": "zona1",
+      "confort_estimado": "calor",
+      "nivel_sugerido": 3,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura >= 28 C y poco movimiento de aire",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.049+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/30",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.058+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/30",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.100+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/31",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.109+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/31",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.151+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/32",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.160+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/32",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.201+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/33",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.211+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/33",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.252+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/34",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.262+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/34",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.304+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/35",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.313+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/35",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.355+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/36",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.363+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/36",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.405+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/37",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.414+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/37",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.456+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/38",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.465+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/38",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.508+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z2/39",
+      "zona_id": "zona2",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.516+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/39",
+      "zona_id": "zona1",
+      "confort_estimado": "confort",
+      "nivel_sugerido": 1,
+      "origen": "reglas_demo_v1",
+      "motivo": "Condiciones dentro de la regla de demostracion",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.558+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona2/estado",
+    "payload": {
+      "estado": "offline",
+      "nodo_id": "esp32-z2",
+      "simulado": true
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/estado",
+    "payload": {
+      "estado": "offline",
+      "nodo_id": "esp32-z1",
+      "simulado": true
+    },
+    "qos": 1,
+    "retain": false
+  },
+  {
+    "topic": "unt/posgrado/aula01/zona1/recomendacion",
+    "payload": {
+      "mensaje_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816/esp32-z1/0",
+      "zona_id": "zona1",
+      "confort_estimado": "frio",
+      "nivel_sugerido": 0,
+      "origen": "reglas_demo_v1",
+      "motivo": "Temperatura menor que 22 C",
+      "simulado": true,
+      "instante_utc": "2026-10-08T16:04:29.604+00:00"
+    },
+    "qos": 1,
+    "retain": false
+  }
+]

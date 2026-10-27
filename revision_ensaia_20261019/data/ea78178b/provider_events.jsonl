@@ -1,0 +1,7 @@
+{"type": "session.started", "session": {"id": "DEMO"}, "demo": true}
+{"type": "session.input_transcript.delta", "event_id": "demo_0", "delta": "Buenos días, eh, hoy ", "start_ms": 0, "end_ms": 500, "demo": true}
+{"type": "session.input_transcript.delta", "event_id": "demo_1", "delta": "presentaré este proyecto. ", "start_ms": 500, "end_ms": 1000, "demo": true}
+{"type": "session.input_transcript.delta", "event_id": "demo_2", "delta": "Este es un ejemplo, o sea, ", "start_ms": 1000, "end_ms": 1500, "demo": true}
+{"type": "session.input_transcript.delta", "event_id": "demo_3", "delta": "un texto texto de demostración. ", "start_ms": 1500, "end_ms": 2000, "demo": true}
+{"type": "session.output_transcript.delta", "event_id": "demo_feedback", "delta": "Ejemplo simulado: reemplaza la muletilla por una pausa breve.", "start_ms": 2200, "end_ms": 2800, "demo": true}
+{"type": "session.closed", "usage": {"seconds": 0}, "demo": true}

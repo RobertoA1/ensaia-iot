@@ -1,0 +1,31 @@
+{
+  "name": "ensaia-cloud",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "tsx --env-file=.env.local scripts/dev.ts",
+    "build": "tsc --noEmit && vite build",
+    "test": "tsx --test tests/core.test.ts",
+    "test:integration": "tsx --env-file=.env.local --test tests/integration.test.ts",
+    "test:whisper": "tsx --env-file=.env.local --test tests/whisper.integration.test.ts"
+  },
+  "dependencies": {
+    "@vercel/blob": "2.8.2",
+    "redis": "6.3.0",
+    "ws": "8.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "@types/ws": "8.18.1",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vite": "8.3.5"
+  },
+  "overrides": {
+    "zod": "4.6.7"
+  }
+}

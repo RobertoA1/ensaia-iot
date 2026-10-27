@@ -1,0 +1,32 @@
+[
+  {
+    "start_ms": 0,
+    "end_ms": 1300,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 15220,
+    "end_ms": 16040,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 25260,
+    "end_ms": 32120,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 38540,
+    "end_ms": 39400,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 44660,
+    "end_ms": 45620,
+    "origin": "rms_threshold_heuristic"
+  },
+  {
+    "start_ms": 56640,
+    "end_ms": 57712,
+    "origin": "rms_threshold_heuristic"
+  }
+]

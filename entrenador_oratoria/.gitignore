@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+data/
+certs/
+firmware/EntrenadorESP8266/secrets.h
+build/
+*.bin
+*.elf

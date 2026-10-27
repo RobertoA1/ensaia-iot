@@ -1,0 +1,86 @@
+{
+  "resultado": "APROBADO",
+  "broker_verificado": "aMQTT 0.11.3 local sobre TCP",
+  "protocolo": "MQTT 3.1.1",
+  "qos": 1,
+  "run_id": "3b00ed20-f0bd-45ef-a0f2-e467c60e1816",
+  "lecturas": 80,
+  "nodos": 2,
+  "canales_virtuales": 6,
+  "recomendaciones_bd": 80,
+  "recomendaciones_mqtt_observadas": 81,
+  "duplicados_sin_filas_adicionales": 1,
+  "mensajes_invalidos_rechazados": 2,
+  "retained_estados": true,
+  "last_will": true,
+  "integridad_relacional": true,
+  "backend_verificado": "SQLite",
+  "emqx_mysql_docker_ejecutado": false,
+  "motivo": "Usuario sin acceso al servicio local de Docker",
+  "resumen_por_nodo_escenario": [
+    [
+      "esp32-z1",
+      "calor",
+      10,
+      29.52,
+      74.15,
+      0.121
+    ],
+    [
+      "esp32-z1",
+      "confort",
+      10,
+      24.47,
+      58.01,
+      0.248
+    ],
+    [
+      "esp32-z1",
+      "frio",
+      10,
+      20.58,
+      55.01,
+      0.101
+    ],
+    [
+      "esp32-z1",
+      "ventilado",
+      10,
+      28.05,
+      67.98,
+      0.851
+    ],
+    [
+      "esp32-z2",
+      "calor",
+      10,
+      30.28,
+      76.17,
+      0.038
+    ],
+    [
+      "esp32-z2",
+      "confort",
+      10,
+      25.28,
+      59.74,
+      0.172
+    ],
+    [
+      "esp32-z2",
+      "frio",
+      10,
+      21.24,
+      56.89,
+      0.019
+    ],
+    [
+      "esp32-z2",
+      "ventilado",
+      10,
+      28.82,
+      69.98,
+      0.767
+    ]
+  ]
+}

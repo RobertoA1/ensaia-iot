@@ -1,0 +1,87 @@
+name: confort-aula
+services:
+  emqx:
+    image: emqx:5.8.8
+    ports:
+      - "127.0.0.1:1883:1883"
+      - "127.0.0.1:18083:18083"
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 10
+    networks: [aula]
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-raiz_demo_2026}
+      MYSQL_DATABASE: confort_db
+      MYSQL_USER: confort
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-confort_demo_2026}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/mysql.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_PASSWORD mysql -u confort -D confort_db -e 'SELECT 1' >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks: [aula]
+  phpmyadmin:
+    image: phpmyadmin:5.2.2
+    ports: ["127.0.0.1:8080:80"]
+    environment:
+      PMA_HOST: mysql
+    depends_on:
+      mysql: {condition: service_healthy}
+    networks: [aula]
+  collector:
+    build: .
+    ports: ["127.0.0.1:8090:8090"]
+    environment:
+      MQTT_HOST: emqx
+      DB_BACKEND: mysql
+      MYSQL_HOST: mysql
+      MYSQL_USER: confort
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-confort_demo_2026}
+      MYSQL_DATABASE: confort_db
+      DATA_DIR: /data
+    volumes: ["./data:/data"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/health', timeout=3)"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+    depends_on:
+      emqx: {condition: service_healthy}
+      mysql: {condition: service_healthy}
+    networks: [aula]
+  zona1:
+    build: .
+    command: ["python", "app/simulator.py"]
+    environment:
+      MQTT_HOST: emqx
+      NODE_ID: esp32-z1
+      ZONE_ID: zona1
+      INTERVAL_SECONDS: ${INTERVAL_SECONDS:-5}
+      PHASE_SAMPLES: ${PHASE_SAMPLES:-12}
+    depends_on:
+      collector: {condition: service_healthy}
+    networks: [aula]
+  zona2:
+    build: .
+    command: ["python", "app/simulator.py"]
+    environment:
+      MQTT_HOST: emqx
+      NODE_ID: esp32-z2
+      ZONE_ID: zona2
+      INTERVAL_SECONDS: ${INTERVAL_SECONDS:-5}
+      PHASE_SAMPLES: ${PHASE_SAMPLES:-12}
+    depends_on:
+      collector: {condition: service_healthy}
+    networks: [aula]
+networks:
+  aula: {driver: bridge}
+volumes:
+  mysql_data:
