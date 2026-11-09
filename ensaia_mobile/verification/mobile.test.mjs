@@ -46,7 +46,7 @@ test('la pantalla React usa el cliente MQTT móvil contra EMQX', { timeout: 55_0
 
   let tree;
   try {
-    const { default: App } = await import('../App.tsx');
+    const { default: App } = await import('../MqttLab.tsx');
     await React.act(async () => { tree = renderer.create(React.createElement(App)); });
     const button = (label) => tree.root.findAllByType('Pressable')
       .find((node) => node.findAllByType('Text').some((text) => text.props.children === label));

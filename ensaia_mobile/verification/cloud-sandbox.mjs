@@ -71,16 +71,23 @@ async function startLocalServices() {
     if (new URL(origin).hostname === '127.0.0.1') return agent.dispatch(options, handler);
     throw new Error(`La prueba bloqueó una solicitud externa a ${origin}`);
   } });
-  return async () => {
+  function seedJSON(pathname, value) {
+    const data = Buffer.from(JSON.stringify(value));
+    blobs.set(pathname, {data, metadata: {
+      pathname, url: `${blobFiles}/${pathname}`, size: data.length, contentType: 'application/json',
+    }});
+  }
+  async function close() {
     setGlobalDispatcher(original);
     await agent.close();
     await new Promise((resolve) => service.close(resolve));
-  };
+  }
+  return {seedJSON, close};
 }
 
 export async function startCloudSandbox({ deviceId, secret, port = 0 }) {
   if (!deviceId || !secret) throw new Error('Faltan las credenciales de laboratorio del nodo.');
-  const stopServices = await startLocalServices();
+  const services = await startLocalServices();
   Object.assign(process.env, {
     REDIS_URL: 'redis://127.0.0.1:6388',
     REDIS_PREFIX: `ensaia:mobile-qa:${randomBytes(8).toString('hex')}`,
@@ -124,7 +131,7 @@ export async function startCloudSandbox({ deviceId, secret, port = 0 }) {
   startWorker();
 
   return {
-    origin, audio,
+    origin, audio, seedJSON: services.seedJSON,
     async close() {
       closed = true;
       clearTimeout(restart);
@@ -137,7 +144,7 @@ export async function startCloudSandbox({ deviceId, secret, port = 0 }) {
       await delay(150);
       await new Promise((resolve) => server.close(resolve));
       await (await store.db()).close();
-      await stopServices();
+      await services.close();
     },
   };
 }

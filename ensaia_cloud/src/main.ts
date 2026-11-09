@@ -1,4 +1,7 @@
 import './style.css';
+import './admin-dashboard.css';
+import {createAdminDashboard} from './admin-dashboard.js';
+import type {LegacyReport} from '../lib/legacy-report.js';
 import type {Metrics,Presentation,Presence} from '../lib/types.js';
 import {candidateRate,recentTranscriptionRate,historyTrend} from '../lib/insights.js';
 import {fillerContexts} from '../lib/fillers.js';
@@ -6,6 +9,7 @@ import {fillerContexts} from '../lib/fillers.js';
 const icon=(name:string)=>{
   const paths:Record<string,string>={mic:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>',
     grid:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
+    bars:'<path d="M3 3v18h18M8 17v-5m5 5V7m5 10v-8"/>',
     clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',spark:'<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3ZM20 2v4M18 4h4"/>',
     arrow:'<path d="M5 12h14m-5-5 5 5-5 5"/>',play:'<path d="m9 5 11 7-11 7Z"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>',
     wave:'<path d="M3 10v4m4-8v12m5-16v20m5-16v12m4-8v4"/>',download:'<path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/>',
@@ -23,8 +27,9 @@ const time=(x:number)=>`${Math.floor(x/60).toString().padStart(2,'0')}:${Math.fl
 const date=(x:string)=>new Date(x).toLocaleString('es-PE',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
 const phase=(x:string)=>({pre:'Antes',post:'Después',practice:'Práctica'}[x]||x);
 const finished=(p:Presentation)=>['completed','interrupted','error'].includes(p.status);
-let state:{username:string;deviceId:string;device:Presence|null;presentation:Presentation|null;aiConfigured:boolean;workerOnline:boolean;maxSeconds:number}|null=null;
+let state:{username:string;deviceId:string;device:Presence|null;presentation:Presentation|null;aiConfigured:boolean;workerOnline:boolean;maxSeconds:number;legacyAdmin?:boolean}|null=null;
 let current:Presentation|null=null;
+let adminDashboard: ReturnType<typeof createAdminDashboard> | undefined;
 let tab='practice',timer:ReturnType<typeof setInterval>|undefined,pollBusy=false,lastSignature='',busy=false;
 let historySignature='';let previousActive:string|null=null;
 let voiceSession='',spokenId=-1,pendingSpeech='',voiceTimer:ReturnType<typeof setTimeout>|undefined,lowSignalAt=0;
@@ -45,7 +50,7 @@ async function api<T=any>(action:string,method='GET',body?:unknown):Promise<T>{
 function toast(text:string){let box=document.querySelector('#toast');if(!box){box=document.createElement('div');box.id='toast';box.setAttribute('role','status');document.body.append(box);}box.textContent=text;box.classList.add('visible');setTimeout(()=>box?.classList.remove('visible'),5500);}
 
 function login(){
-  if(timer)clearInterval(timer);state=null;current=null;
+  if(timer)clearInterval(timer);state=null;current=null;adminDashboard=undefined;
   $('#app').innerHTML=`<main class="login-layout"><section class="login-story"><a class="brand" href="/">${icon('wave')}<span>ENSAIA<span class="brand-dot">.</span></span></a><div class="story-body"><span class="eyebrow light">UN ESPACIO PARA ENCONTRAR TU VOZ</span><h1>Las grandes ideas<br>merecen una<br><em>voz clara.</em></h1><p>Practica tu presentación, escucha nuevas perspectivas y mejora un poco en cada intento.</p><div class="story-wave" aria-hidden="true">${Array.from({length:37},(_,i)=>`<i></i>`).join('')}</div></div><footer>Tu voz. Tu ritmo. Tu siguiente paso.</footer></section><section class="login-form-panel"><div class="login-form"><span class="small-tag">TU ESPACIO DE PRÁCTICA</span><h2>Qué bueno tenerte aquí.</h2><p class="muted">Entra con las credenciales registradas por tu dispositivo ENSAIA.</p><form id="login-form"><label for="username">Usuario</label><input id="username" name="username" autocomplete="username" placeholder="Tu usuario de ENSAIA" maxlength="32" required><label for="password">Contraseña</label><div class="password-field"><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Tu contraseña" maxlength="128" required><button type="button" id="show-password" aria-label="Mostrar contraseña">Ver</button></div><p id="login-error" class="form-error" role="alert"></p><button class="primary full" id="login-submit">Entrar a mi espacio ${icon('arrow')}</button></form><div class="login-help">${icon('link')}<div><strong>Tu dispositivo es el primer paso</strong><p>Conecta el ESP32 a Wi-Fi. El Monitor Serie te mostrará tu usuario y contraseña cuando el servidor acepte el registro.</p></div></div><span class="privacy-note">Acceso privado · Conexión cifrada · Tu micrófono, bajo tu control</span></div></section></main>`;
   $('#show-password').onclick=()=>{const p=$<HTMLInputElement>('#password');p.type=p.type==='password'?'text':'password';$('#show-password').textContent=p.type==='password'?'Ver':'Ocultar';};
   $('#login-form').onsubmit=async event=>{event.preventDefault();const button=$<HTMLButtonElement>('#login-submit');button.disabled=true;$('#login-error').textContent='';try{await api('login','POST',{username:$<HTMLInputElement>('#username').value.trim().toLowerCase(),password:$<HTMLInputElement>('#password').value});await dashboard();}catch(e){$('#login-error').textContent=(e as Error).message;}finally{button.disabled=false;}};
@@ -62,6 +67,16 @@ async function dashboard(){
   logs.after(Object.assign(document.createElement('section'),{id:'analysis-panel',className:'card analysis-card'}));
   const noFeedback=Object.assign(document.createElement('p'),{id:'no-feedback-note',className:'measurement-note',textContent:'Sin consejos durante esta toma: los indicadores de desempeño y la evaluación aparecerán al finalizar.'});
   noFeedback.hidden=true;$('#analysis-panel').after(noFeedback);
+  if (state!.legacyAdmin) {
+    adminDashboard = createAdminDashboard(() => api<LegacyReport>('legacy-report'), id => void openPresentation(id));
+    $('#practice-view').before(adminDashboard.view);
+    const nav = document.createElement('button');
+    nav.className = 'nav-item';
+    nav.dataset.tab = 'admin';
+    nav.setAttribute('aria-label', 'Panel de administración');
+    nav.innerHTML = `${icon('bars')}Administración`;
+    $('.sidebar nav').prepend(nav);
+  }
   document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab!));
   $('#logout').onclick=async()=>{await api('logout','POST',{});login();};
   $('#presentation-form').onsubmit=start;
@@ -72,9 +87,17 @@ async function dashboard(){
   document.querySelectorAll<HTMLButtonElement>('.export-button').forEach(b=>b.onclick=()=>download('export'));
   $('#audio-download').onclick=()=>download('audio');
   $('#compare').onclick=compare;
-  drawState();await loadHistory();timer=setInterval(()=>void poll(),1500);
+  drawState();if(adminDashboard)switchTab('admin');
+  await loadHistory();timer=setInterval(()=>void poll(),1500);
 }
-function switchTab(next:string){tab=next;for(const name of ['practice','history','report'])$(`#${name}-view`).hidden=next!==name;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',(x as HTMLElement).dataset.tab===next));if(next!=='practice')void loadHistory();}
+function switchTab(next:string){
+  tab=next;
+  for(const name of ['practice','history','report'])$(`#${name}-view`).hidden=next!==name;
+  if(adminDashboard)adminDashboard.view.hidden=next!=='admin';
+  document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',(x as HTMLElement).dataset.tab===next));
+  if(next==='admin')void adminDashboard?.show();
+  else if(next!=='practice')void loadHistory();
+}
 function drawState(){
   if(!state)return;const online=Boolean(state.device?.online&&Date.now()-(state.device?.at||0)<12000);
   const active=state.presentation&&!finished(state.presentation)?state.presentation:null;
@@ -162,12 +185,26 @@ async function stop(){if(!state?.presentation||busy)return;if(voiceTimer)clearTi
 function download(action:string){if(current)window.location.assign(`/api/server?action=${action}&id=${current.id}`);}
 type HistoryItem=Partial<Presentation>&{score?:number|null;scoreSource?:'posthoc'};
 let sessions:HistoryItem[]=[];
+async function openPresentation(id: string) {
+  const owner = state?.username;
+  try {
+    const presentation = await api<Presentation>(`presentation&id=${encodeURIComponent(id)}`);
+    if (!state || state.username !== owner) return;
+    current = presentation;
+    lastSignature = '';
+    switchTab('practice');
+    drawState();
+    $('#summary-card').scrollIntoView({behavior:'smooth',block:'start'});
+  } catch (error) {
+    toast((error as Error).message);
+  }
+}
 async function loadHistory(){
   try{
     const data=await api<{sessions:HistoryItem[]}>('history');sessions=data.sessions;
     const signature=JSON.stringify(sessions);if(signature===historySignature)return;historySignature=signature;
     $('#history-list').innerHTML=sessions.length?`<div class="history-header"><span>PRESENTACIÓN</span><span>ETAPA</span><span>DURACIÓN</span><span>ESTADO</span><span></span></div>`+sessions.map(p=>`<button class="history-row" data-id="${p.id}"><span><strong>${esc(p.title)}</strong><small>${date(p.createdAt!)}</small></span><span>${phase(p.phase!)}</span><span>${time(p.metrics?.seconds||0)}</span><span class="history-status ${p.status==='completed'?'done':''}">${p.status==='completed'?'Guardada':p.status==='interrupted'?'Incompleta':'En proceso'}</span>${icon('arrow')}</button>`).join(''):'<div class="empty-history">'+icon('mic')+'<h2>Tu primera práctica te espera.</h2><p>Las presentaciones guardadas aparecerán aquí.</p><button class="primary" id="first-practice">Empezar una práctica</button></div>';
-    document.querySelectorAll<HTMLButtonElement>('[data-id]').forEach(b=>b.onclick=async()=>{try{current=await api(`presentation&id=${b.dataset.id}`);lastSignature='';switchTab('practice');drawState();$('#summary-card').scrollIntoView({behavior:'smooth',block:'start'});}catch(e){toast((e as Error).message);}});
+    document.querySelectorAll<HTMLButtonElement>('[data-id]').forEach(b=>b.onclick=()=>void openPresentation(b.dataset.id!));
     const first=document.querySelector<HTMLButtonElement>('#first-practice');if(first)first.onclick=()=>switchTab('practice');
     const options=sessions.filter(x=>x.status==='completed'||x.status==='interrupted').map(p=>`<option value="${p.id}">${esc(p.title)} · ${phase(p.phase!)} · ${date(p.createdAt!)}</option>`).join('');
     const compareA=$<HTMLSelectElement>('#compare-a'),compareB=$<HTMLSelectElement>('#compare-b');

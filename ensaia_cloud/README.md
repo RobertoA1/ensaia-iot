@@ -16,6 +16,10 @@ Versión preparada el 26 de octubre de 2026. Para el modo Whisper local y las nu
 
 El usuario y la contraseña se conservan en NVS. **No borres toda la memoria flash después del primer registro**: generar una contraseña nueva no reemplaza la que ya está vinculada en el servidor. Una carga normal sin borrar NVS conserva el acceso. Si se pierde NVS, se necesita recuperar las credenciales originales o realizar una recuperación administrativa del vínculo; no hay restablecimiento automático implementado.
 
+Para consultar un archivo histórico sin placa, extrae el paquete `ensaia-iot-import/v1` en una carpeta privada y ejecuta `npm run import:legacy -- <carpeta-extraída> <usuario-nuevo>` desde `ensaia_cloud`. La comprobación valida los hashes antes de escribir. Con `--apply` y el token del Blob privado, guarda el paquete y los registros compatibles con el panel. El acceso de la cuenta queda en `.private/<usuario-nuevo>-login.json`. La APK y la web usan esa cuenta para consultar el historial y comparar métricas.
+
+La cuenta `ensaia_legacy` del archivo del artículo abre **Administración** al iniciar sesión. El informe lee el manifiesto, las sesiones y el índice del Blob privado. Presenta el inventario completo y calcula Antes/Después con una pareja técnicamente completa por ejercicio. La API verifica la sesión y la asociación al archivo antes de entregar el informe.
+
 ## Conexiones
 
 Desconecta la alimentación antes de cablear. Usa la numeración GPIO, no la posición física del conector.

@@ -8,6 +8,7 @@ import * as store from '../lib/store.js';
 import {ipKey,validUsername,verifyPassword} from '../lib/security.js';
 import {SpeechMeter} from '../lib/metrics.js';
 import {iso,terminal,type Presentation} from '../lib/types.js';
+import {canViewLegacyReport} from '../lib/legacy-report.js';
 
 function json(res:ServerResponse,status:number,data:unknown){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(data));}
 function token(req:IncomingMessage){return req.headers.cookie?.match(/(?:^|;\s*)ensaia_session=([a-f0-9]{64})(?:;|$)/)?.[1]??'';}
@@ -43,6 +44,10 @@ export async function handler(req:IncomingMessage,res:ServerResponse){
     const ownerName=await store.loginOwner(token(req));
     const owner=ownerName?await store.account(ownerName):null;
     if(!owner){json(res,401,{error:'Inicia sesión para acceder'});return;}
+    if(action==='legacy-report'&&req.method==='GET'){
+      if(!canViewLegacyReport(owner)){json(res,403,{error:'Acceso administrativo requerido'});return;}
+      json(res,200,await store.legacyReport(owner));return;
+    }
     if(action==='logout'&&req.method==='POST'){
       await store.logout(token(req));res.setHeader('Set-Cookie','ensaia_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0');json(res,200,{ok:true});return;
     }
@@ -55,7 +60,7 @@ export async function handler(req:IncomingMessage,res:ServerResponse){
         await store.archive(presentation);await store.clearActive(owner.deviceId,presentation.id);
       }
       json(res,200,{username:owner.username,deviceId:owner.deviceId,device,
-        presentation,aiConfigured:Boolean(process.env.OPENAI_API_KEY),workerOnline:await workerOnline(owner.deviceId),maxSeconds:180});return;
+        presentation,legacyAdmin:canViewLegacyReport(owner),aiConfigured:Boolean(process.env.OPENAI_API_KEY),workerOnline:await workerOnline(owner.deviceId),maxSeconds:180});return;
     }
     if(action==='history'&&req.method==='GET'){json(res,200,{sessions:await store.history(owner.username)});return;}
     if(['presentation','export','audio'].includes(action)&&req.method==='GET'){
