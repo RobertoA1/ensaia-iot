@@ -2,6 +2,7 @@ import {createClient} from 'redis';
 import {get, put, list} from '@vercel/blob';
 import type {Account, Command, Presence, Presentation} from './types.js';
 import {hash,ipKey,passwordHash, randomToken, verifyPassword,seal,unseal} from './security.js';
+import {buildLegacyReport, canViewLegacyReport, legacyArchiveId, type ArchiveIndex, type ArchiveManifest, type ArchiveSource, type LegacyReport} from './legacy-report.js';
 
 function newClient(){return createClient({url:process.env.REDIS_URL,disableOfflineQueue:true,
   socket:{connectTimeout:8000,reconnectStrategy: (retries:number) => retries>3?new Error('Redis no disponible'):Math.min(retries*200,1500)}});}
@@ -25,6 +26,23 @@ async function readJSON<T>(path:string):Promise<T|null> {
 async function writeJSON(path:string, value:unknown, overwrite=false) {
   await put(path,JSON.stringify(value),{...blobOptions(),contentType:'application/json',addRandomSuffix:false,
     allowOverwrite:overwrite,cacheControlMaxAge:60});
+}
+let historicalReport: Promise<LegacyReport> | undefined;
+export function legacyReport(owner: Account): Promise<LegacyReport> {
+  if (!canViewLegacyReport(owner)) throw new Error('Acceso administrativo requerido');
+  const prefix = `legacy/${owner.username}/${legacyArchiveId}`;
+  historicalReport ??= Promise.all([
+    readJSON<ArchiveManifest>(`${prefix}/manifest.json`),
+    readJSON<ArchiveSource>(`${prefix}/sessions.json`),
+    readJSON<ArchiveIndex>(`${prefix}/index.json`),
+  ]).then(([manifest, source, index]) => {
+    if (!manifest || !source || !index) throw new Error('Archivo histórico no disponible');
+    return buildLegacyReport(manifest, source, index);
+  }).catch(error => {
+    historicalReport = undefined;
+    throw error;
+  });
+  return historicalReport;
 }
 export async function rateLimit(scope:string, limit:number, seconds:number) {
   const r=await db();

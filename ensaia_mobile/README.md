@@ -2,6 +2,8 @@
 
 La APK predeterminada abre [ENSAIA Cloud](https://ensaia-oratoria.vercel.app) en una WebView de Android. Usa la versión móvil de la misma interfaz web y la misma cuenta para acceder a la práctica, el historial, las descargas y la comparación de progreso. La captura sigue realizándose con el dispositivo ENSAIA asociado a la cuenta. Los consejos hablados usan el motor de voz de Android.
 
+La cuenta del archivo histórico tiene acceso al **Panel de administración** en la misma APK. El panel se habilita al desplegar la actualización de ENSAIA Cloud y se abre al iniciar sesión con `ensaia_legacy`.
+
 ## Compilar y probar la réplica web
 
 Desde `ensaia_mobile`, instala las dependencias con `npm ci`. Puedes compilar un APK con EAS usando el perfil `preview` o en local con Android SDK y Java:

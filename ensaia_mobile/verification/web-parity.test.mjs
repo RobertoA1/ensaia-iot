@@ -52,7 +52,10 @@ const later = presentation('0000000000000002', 'Segunda práctica', 80, '2026-01
 const recorded = presentation('0000000000000003', 'Práctica actual', 80, '2026-01-03T12:00:00Z');
 
 async function fixture(t, options = {}) {
-  const context = await browser.newContext({ ...devices['Pixel 7'], acceptDownloads: true });
+  const context = await browser.newContext({
+    ...(options.desktop ? { viewport: { width: 1280, height: 900 } } : devices['Pixel 7']),
+    acceptDownloads: true,
+  });
   const sessionCookie = 'ensaia_session=fixture';
   if (options.signedIn !== false) {
     await context.addCookies([{ name: 'ensaia_session', value: 'fixture', url: origin, httpOnly: true, sameSite: 'Strict' }]);
@@ -95,8 +98,11 @@ async function fixture(t, options = {}) {
     }
     if (action === 'state') return send({
       username: 'demo', deviceId: 'fixture', device: { online: state.online, at: Date.now(), rssi: -53 },
-      aiConfigured: true, workerOnline: true, maxSeconds: 180, presentation: state.active,
+      aiConfigured: true, workerOnline: true, maxSeconds: 180, presentation: state.active, legacyAdmin: Boolean(options.adminReport),
     });
+    if (action === 'legacy-report') {
+      return options.adminReport ? send(options.adminReport) : send({error:'Acceso administrativo requerido'},403);
+    }
     if (action === 'start') {
       state.active = { ...recorded, ...data, status: 'recording' };
       if (!data.feedback) state.active.events = [];
@@ -132,6 +138,54 @@ const content = async (page, selector, expected) => {
 };
 const tab = (page, name) => page.locator(`[data-tab="${name}"]`).click();
 
+const reportPre = {
+  id: earlier.id, originalId: '00000001', code: 'D001', phase: 'pre', date: earlier.createdAt,
+  simulated: false, complete: true, feedback: true, missingFrames: 0, providerFinalized: true,
+  seconds: 40, words: 100, wordsPerMinute: 150, fillers: 3, repetitions: 2, pauses: 1,
+};
+const reportPost = {
+  ...reportPre, id: later.id, originalId: '00000002', phase: 'post', date: later.createdAt, fillers: 0,
+};
+const aggregate = row => ({
+  ...row, count: 1, medianWordsPerMinute: row.wordsPerMinute,
+  fillersPerMinute: row.fillers * 60 / row.seconds, fillersPer100Words: row.fillers * 100 / row.words,
+});
+const adminReport = {
+  inventory: {
+    sessions: 2, pre: 1, post: 1, practice: 0, wav: 4, audio: {original:2, relay:2, assistant:0},
+    transcribed: 2, simulated: 0, occurrences: 6, unreviewed: 6, fillers: 3, repetitions: 2, pauses: 1,
+    sourceEvents: 20, corrected: 0, humanEvaluations: 0,
+  },
+  comparison: {pre: aggregate(reportPre), post: aggregate(reportPost)},
+  exercises: [{
+    code: 'D001', script: 'Organización del tiempo · A', preCount: 1, postCount: 1,
+    ambiguous: false, pair: {pre: reportPre, post: reportPost},
+  }],
+  sessions: [reportPost, reportPre],
+};
+
+for (const desktop of [false, true]) {
+  test(`administración en ${desktop ? 'escritorio' : 'pantalla móvil'}: comparación, filtros y detalle`, async t => {
+    const {page, state} = await fixture(t, {desktop, adminReport, online:false});
+    await content(page, '#admin-view h1', /Panel de administración/);
+    await content(page, '#admin-count', /2 de 2 sesiones/);
+    const table = page.getByRole('table', {name:'Indicadores de los pares técnicamente completos'});
+    const row = table.getByRole('row', {name:'Candidatos a muletilla 3 0', exact:true});
+    await row.waitFor();
+    await page.locator('.admin-exercise summary').click();
+    await page.getByRole('table', {name:'Comparación del ejercicio D001'}).waitFor();
+    await page.locator('#admin-phase').selectOption('post');
+    await content(page, '#admin-count', /1 de 2 sesiones/);
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+    await page.locator('#admin-sessions button').click();
+    await content(page, '#summary', /Próximo paso/);
+    assert.ok(state.calls.some(call => call.action === 'legacy-report'));
+    await tab(page,'admin');
+    await page.locator('#admin-refresh').click();
+    await content(page, '#admin-count', /2 de 2 sesiones/);
+  });
+}
+
 test('acceso: contraseña visible, credenciales inválidas, sesión y cierre', async t => {
   const { page } = await fixture(t, { signedIn: false });
   await content(page, 'h2', /Qué bueno tenerte aquí/);
@@ -144,6 +198,7 @@ test('acceso: contraseña visible, credenciales inválidas, sesión y cierre', a
   await page.locator('#password').fill('prueba');
   await page.locator('#login-submit').click();
   await content(page, '#top-status', /Dispositivo conectado/);
+  assert.equal(await page.locator('[data-tab="admin"]').count(), 0);
   await page.reload();
   await content(page, '#top-status', /Dispositivo conectado/);
   await page.locator('#logout').click();
