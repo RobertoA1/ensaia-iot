@@ -1,0 +1,13 @@
+node_modules/
+.expo/
+.private/
+android/
+ios/
+dist/
+*.apk
+*.jks
+*.key
+.env*
+certs/*
+!certs/broker-ca.crt
+!certs/broker-host.txt

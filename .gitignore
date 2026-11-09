@@ -23,6 +23,13 @@ coverage/
 # Compilaciones y registros
 build/
 dist/
+android/
+ios/
+.expo/
+*.apk
+*.aab
+*.jks
+*.keystore
 *.log
 *.bin
 *.elf
