@@ -1,9 +1,13 @@
 /*
- * ENSAIA Cloud v1 | ESP32-S3 N16R8 + INMP441.
+ * ENSAIA Cloud v2 | ESP32-S3 N16R8 + INMP441.
  * Arduino-ESP32 3.3.5; WebSockets (Markus Sattler) 2.7.2; ArduinoJson 6.21.5.
  * SCK=4, WS=5, SD=6, L/R=GND, VDD=3V3.
  * Conexion DIRECTA WSS a Vercel. No necesita MQTT, ESP8266 ni puente en laptop.
  * La clave OpenAI permanece en el servidor. Credenciales de usuario generadas en NVS.
+ *
+ * v2: el servidor renueva su conexión cada pocos minutos. La placa sigue capturando en un
+ * búfer circular en PSRAM, reconecta y reenvía desde la trama que el servidor indique, de
+ * modo que una toma larga no se corta. Requiere PSRAM habilitada (OPI PSRAM).
  */
 #include <WiFi.h>
 #include <WebSocketsClient.h>
@@ -28,9 +32,14 @@ WebSocketsClient cloud;
 Preferences preferences;
 i2s_chan_handle_t microphone=nullptr;
 SemaphoreHandle_t captureMutex;
-QueueHandle_t audioQueue;
 struct Frame{uint8_t bytes[ensaia_cloud::PACKET];};
+// Búfer circular indexado por número de trama: la trama n vive en ring[n % ringFrames].
+// Con PSRAM guarda 60 s (unos 2 MB), suficiente para reenviar tras renovar la conexión.
+Frame* ring=nullptr;uint32_t ringFrames=0;
 bool captureEnabled=false,draining=false,authorized=false,cloudStarted=false;
+// handover: el servidor pidió renovar la conexión; se captura sin enviar hasta recibir capture.resume.
+bool handover=false,pendingDisconnect=false;uint32_t handoverAt=0;
+const uint32_t HANDOVER_TIMEOUT_MS=45000;
 uint32_t epoch=0,captured=0,sent=0,acknowledged=0,peak=0,otherPeak=0,reportedPeak=0;
 volatile uint32_t dmaOverflows=0;
 const char* captureError=nullptr;
@@ -86,7 +95,9 @@ void captureTask(void*){
     peak=max(peak,framePeak);otherPeak=max(otherPeak,frameOtherPeak);
     if(captureEnabled&&generation==epoch){
       if(previousOverflows!=dmaOverflows){captureEnabled=false;captureError="i2s_dma_overflow";}
-      else{ensaia_cloud::header(frame.bytes,sid,captured);if(xQueueSend(audioQueue,&frame,0)==pdTRUE)++captured;else{captureEnabled=false;captureError="audio_queue_full";}}
+      // No se pisa una trama que el servidor aún no confirmó: podría pedirla de nuevo.
+      else if(captured-acknowledged>=ringFrames){captureEnabled=false;captureError="audio_queue_full";}
+      else{ensaia_cloud::header(frame.bytes,sid,captured);memcpy(ring[captured%ringFrames].bytes,frame.bytes,sizeof(frame.bytes));++captured;}
     }
     previousOverflows=dmaOverflows;
     xSemaphoreGive(captureMutex);
@@ -100,41 +111,75 @@ void event(WStype_t type,uint8_t* payload,size_t length){
   if(type==WStype_CONNECTED){
     authorized=false;
     StaticJsonDocument<1024> auth;auth["type"]="device.auth";auth["deviceId"]=DEVICE_ID;auth["secret"]=DEVICE_SECRET;auth["username"]=username;auth["password"]=password;
-    sendJSON(auth);Serial.println("Servidor conectado. Verificando el dispositivo...");return;
+    auth["handover"]=true;if(handover&&sid[0])auth["resume"]=sid;
+    sendJSON(auth);Serial.println(handover?"Servidor conectado. Continuando la toma...":"Servidor conectado. Verificando el dispositivo...");return;
   }
   if(type==WStype_DISCONNECTED){
-    haltCapture();authorized=false;draining=false;xQueueReset(audioQueue);sid[0]=0;
+    authorized=false;
+    if(handover&&captureEnabled){Serial.println("[RENOVANDO CONEXION] La captura continua; el audio se reenviara al reconectar.");return;}
+    haltCapture();handover=false;draining=false;
+    xSemaphoreTake(captureMutex,portMAX_DELAY);sent=captured;acknowledged=captured;xSemaphoreGive(captureMutex);sid[0]=0;
     Serial.println("Conexion cerrada. Reintentando; una toma interrumpida no se reanuda.");return;
   }
   if(type!=WStype_TEXT||length>3072)return;
   StaticJsonDocument<4096> doc;
   if(deserializeJson(doc,reinterpret_cast<const char*>(payload),length))return;
   const char* kind=doc["type"]|"";
-  if(!strcmp(kind,"auth.ok")){authorized=true;Serial.println("DISPOSITIVO AUTORIZADO. Abre la web para iniciar una presentacion.");credentials();}
+  if(!strcmp(kind,"auth.ok")){authorized=true;if(!handover){Serial.println("DISPOSITIVO AUTORIZADO. Abre la web para iniciar una presentacion.");credentials();}}
   else if(!strcmp(kind,"auth.error")){Serial.print("REGISTRO RECHAZADO: ");Serial.println(doc["message"]|"Revisa la configuracion");authorized=false;}
   else if(!strcmp(kind,"capture.start")&&authorized){
     const char* id=doc["sid"]|"";
     if(!validSid(id)||(doc["sampleRate"]|0)!=16000||(doc["samplesPerFrame"]|0)!=320){notifyError("unsupported_audio_format");return;}
     xSemaphoreTake(captureMutex,portMAX_DELAY);
     if(captureEnabled||draining){xSemaphoreGive(captureMutex);notifyError("capture_already_running");return;}
-    xQueueReset(audioQueue);strcpy(sid,id);captured=0;sent=0;acknowledged=0;captureError=nullptr;++epoch;captureEnabled=true;
+    strcpy(sid,id);captured=0;sent=0;acknowledged=0;captureError=nullptr;++epoch;captureEnabled=true;handover=false;
     xSemaphoreGive(captureMutex);
-    const uint32_t seconds=doc["maxSeconds"]|180;limitMs=min(seconds,static_cast<uint32_t>(180))*1000;startedAt=millis();
+    const uint32_t seconds=doc["maxSeconds"]|180;limitMs=min(seconds,static_cast<uint32_t>(14400))*1000;startedAt=millis();
     StaticJsonDocument<160> reply;reply["type"]="capture.started";reply["sid"]=sid;sendJSON(reply);
     Serial.printf("[GRABANDO] %s. Control desde la web.\n",sid);
-  }else if(!strcmp(kind,"capture.stop")&&authorized&&!strcmp(doc["sid"]|"",sid)){haltCapture();draining=true;}
-  else if(!strcmp(kind,"audio.ack")&&!strcmp(doc["sid"]|"",sid)){acknowledged=doc["frames"]|acknowledged;}
-  else if(!strcmp(kind,"feedback")){Serial.print("[CONSEJO IA] ");Serial.println(doc["text"]|"");}
+  }else if(!strcmp(kind,"capture.handover")&&authorized&&captureEnabled&&!strcmp(doc["sid"]|"",sid)){
+    // El servidor guarda la toma y cierra esta conexion. Se deja de enviar, no de capturar.
+    handover=true;handoverAt=millis();pendingDisconnect=true;
+  }else if(!strcmp(kind,"capture.resume")&&authorized&&handover&&!strcmp(doc["sid"]|"",sid)){
+    const uint32_t from=doc["frames"]|0xFFFFFFFFu;
+    xSemaphoreTake(captureMutex,portMAX_DELAY);
+    const bool available=from<=captured&&captured-from<=ringFrames&&from>=acknowledged;
+    if(available){sent=from;acknowledged=from;}
+    const uint32_t backlog=captured-from;
+    xSemaphoreGive(captureMutex);
+    handover=false;
+    if(available)Serial.printf("[CONEXION RENOVADA] Reenviando %lu tramas retenidas.\n",(unsigned long)backlog);
+    else haltCapture("handover_overflow");
+  }else if(!strcmp(kind,"capture.lost")&&authorized&&!strcmp(doc["sid"]|"",sid)){
+    haltCapture();handover=false;draining=false;
+    xSemaphoreTake(captureMutex,portMAX_DELAY);sent=captured;acknowledged=captured;xSemaphoreGive(captureMutex);sid[0]=0;
+    Serial.println("[TOMA NO CONTINUADA] El servidor no pudo retomarla. Revisa la web.");
+  }else if(!strcmp(kind,"capture.stop")&&authorized&&!strcmp(doc["sid"]|"",sid)){
+    // Si llega sin capture.resume, el servidor cierra la toma con lo ya guardado: no se reenvia lo retenido.
+    if(handover){handover=false;xSemaphoreTake(captureMutex,portMAX_DELAY);sent=captured;xSemaphoreGive(captureMutex);}
+    haltCapture();draining=true;
+  }
+  else if(!strcmp(kind,"audio.ack")&&!strcmp(doc["sid"]|"",sid)){
+    const uint32_t frames=doc["frames"]|acknowledged;
+    xSemaphoreTake(captureMutex,portMAX_DELAY);if(frames>acknowledged&&frames<=sent)acknowledged=frames;xSemaphoreGive(captureMutex);
+  }
+  else if(!strcmp(kind,"feedback")){Serial.print((doc["interrupt"]|false)?"[INTERRUMPE - escucha] ":"[CONSEJO IA] ");Serial.println(doc["text"]|"");}
   else if(!strcmp(kind,"session.ended")){Serial.println("[GUARDADO] Consulta el resumen y las estadisticas en la web.");sid[0]=0;}
   else if(!strcmp(kind,"reconnect")){cloud.disconnect();}
   else if(!strcmp(kind,"error")){Serial.print("[SERVIDOR] ");Serial.println(doc["message"]|"");}
 }
 void setup(){
   Serial.begin(115200);delay(700);
-  Serial.println("\nENSAIA Cloud | ESP32-S3 + INMP441 | v1");
+  Serial.println("\nENSAIA Cloud | ESP32-S3 + INMP441 | v2");
   Serial.printf("Flash: %u MB | PSRAM: %u MB\n",ESP.getFlashChipSize()/1048576,ESP.getPsramSize()/1048576);
-  captureMutex=xSemaphoreCreateMutex();audioQueue=xQueueCreate(100,sizeof(Frame));
-  if(!captureMutex||!audioQueue){Serial.println("ERROR: memoria insuficiente");while(true)delay(1000);}
+  captureMutex=xSemaphoreCreateMutex();
+  if(psramFound()){ringFrames=3000;ring=static_cast<Frame*>(ps_malloc(sizeof(Frame)*ringFrames));}
+  if(!ring){
+    ringFrames=120;ring=static_cast<Frame*>(malloc(sizeof(Frame)*ringFrames));
+    Serial.println("AVISO: sin PSRAM. Selecciona OPI PSRAM; sin ella las tomas largas se cortan al renovar la conexion.");
+  }
+  if(!captureMutex||!ring){Serial.println("ERROR: memoria insuficiente");while(true)delay(1000);}
+  Serial.printf("Bufer de audio: %lu tramas (%lu s)\n",(unsigned long)ringFrames,(unsigned long)(ringFrames/50));
   i2s_chan_config_t channel=I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO,I2S_ROLE_MASTER);channel.dma_desc_num=8;channel.dma_frame_num=320;
   ESP_ERROR_CHECK(i2s_new_channel(&channel,nullptr,&microphone));
   i2s_std_config_t config={};config.clk_cfg=I2S_STD_CLK_DEFAULT_CONFIG(16000);
@@ -164,8 +209,11 @@ void loop(){
     Serial.printf("[MIC] Izq=%lu/32768 | Der=%lu/32768 | WiFi=%s | Web=%s\n",
       (unsigned long)level,(unsigned long)otherLevel,WiFi.isConnected()?"SI":"NO",authorized?"SI":"NO");
   }
+  if(handover&&now-handoverAt>HANDOVER_TIMEOUT_MS){
+    handover=false;haltCapture("handover_timeout");Serial.println("[TOMA INTERRUMPIDA] No se pudo renovar la conexion a tiempo.");
+  }
   if(!WiFi.isConnected()){
-    if(captureEnabled)haltCapture("wifi_disconnected");
+    if(captureEnabled&&!handover)haltCapture("wifi_disconnected");
     if(now-lastWifiTry>10000){lastWifiTry=now;WiFi.reconnect();}
     delay(2);return;
   }
@@ -173,25 +221,34 @@ void loop(){
     cloud.beginSslWithCA(CLOUD_HOST,443,"/api/server?role=device",CLOUD_ROOT_CA,"arduino");cloudStarted=true;
   }
   if(cloudStarted)cloud.loop();
+  if(pendingDisconnect){pendingDisconnect=false;cloud.disconnect();}
   if(!authorized){delay(2);return;}
   // cloud.loop() puede iniciar la captura después de calcular `now`.
   // Leer millis() de nuevo evita que la resta sin signo se desborde al empezar.
   if(captureEnabled&&millis()-startedAt>=limitMs){haltCapture();draining=true;}
-  Frame frame;
-  for(int i=0;i<4&&authorized;i++){
-    if(xQueueReceive(audioQueue,&frame,0)!=pdTRUE)break;
-    if(cloud.sendBIN(frame.bytes,sizeof(frame.bytes)))++sent;else{haltCapture("websocket_send_failed");break;}
+  static Frame frame;
+  for(int i=0;i<4&&authorized&&!handover;i++){
+    xSemaphoreTake(captureMutex,portMAX_DELAY);
+    const bool waiting=sent<captured;if(waiting)memcpy(frame.bytes,ring[sent%ringFrames].bytes,sizeof(frame.bytes));
+    xSemaphoreGive(captureMutex);
+    if(!waiting)break;
+    if(cloud.sendBIN(frame.bytes,sizeof(frame.bytes))){xSemaphoreTake(captureMutex,portMAX_DELAY);++sent;xSemaphoreGive(captureMutex);}
+    else{haltCapture("websocket_send_failed");break;}
     cloud.loop();
   }
   if(captureEnabled&&sent>acknowledged+100)haltCapture("server_ack_timeout");
   xSemaphoreTake(captureMutex,portMAX_DELAY);const char* error=captureError;captureError=nullptr;const uint32_t total=captured;xSemaphoreGive(captureMutex);
-  if(error){notifyError(error);Serial.print("[CAPTURA INTERRUMPIDA] ");Serial.println(error);xQueueReset(audioQueue);draining=false;}
-  if(draining&&!uxQueueMessagesWaiting(audioQueue)){
+  if(error){
+    notifyError(error);Serial.print("[CAPTURA INTERRUMPIDA] ");Serial.println(error);draining=false;handover=false;
+    xSemaphoreTake(captureMutex,portMAX_DELAY);sent=captured;acknowledged=captured;xSemaphoreGive(captureMutex);
+  }
+  xSemaphoreTake(captureMutex,portMAX_DELAY);const bool flushed=sent>=captured;xSemaphoreGive(captureMutex);
+  if(draining&&flushed){
     StaticJsonDocument<256> done;done["type"]="capture.ended";done["sid"]=sid;done["frames"]=total;done["reason"]="user";sendJSON(done);draining=false;
     Serial.printf("[CAPTURA FINALIZADA] %lu tramas. Esperando informe...\n",(unsigned long)total);
   }
   if(now-lastStatus>=2000){
-    lastStatus=now;StaticJsonDocument<256> status;status["type"]="device.status";status["rssi"]=WiFi.RSSI();status["peak"]=reportedPeak;status["freeHeap"]=ESP.getFreeHeap();status["firmware"]="ensaia-cloud-s3-v1";sendJSON(status);
+    lastStatus=now;StaticJsonDocument<256> status;status["type"]="device.status";status["rssi"]=WiFi.RSSI();status["peak"]=reportedPeak;status["freeHeap"]=ESP.getFreeHeap();status["firmware"]="ensaia-cloud-s3-v2";sendJSON(status);
   }
   delay(1);
 }

@@ -6,9 +6,10 @@ import {DeviceConnection} from '../lib/device.js';
 import {WhisperWorker,workerOnline} from '../lib/worker.js';
 import * as store from '../lib/store.js';
 import {ipKey,validUsername,verifyPassword} from '../lib/security.js';
-import {SpeechMeter} from '../lib/metrics.js';
+import {SpeechMeter,wav} from '../lib/metrics.js';
 import {iso,terminal,type Presentation} from '../lib/types.js';
 import {canViewLegacyReport} from '../lib/legacy-report.js';
+import {DEFAULT_END_WORD,sessionCapSeconds,validEndWord} from '../lib/control.js';
 
 function json(res:ServerResponse,status:number,data:unknown){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(data));}
 function token(req:IncomingMessage){return req.headers.cookie?.match(/(?:^|;\s*)ensaia_session=([a-f0-9]{64})(?:;|$)/)?.[1]??'';}
@@ -54,13 +55,15 @@ export async function handler(req:IncomingMessage,res:ServerResponse){
     if(action==='state'&&req.method==='GET'){
       const [device,sid]=await Promise.all([store.getPresence(owner.deviceId),store.activeSid(owner.deviceId)]);
       let presentation=sid?await store.getPresentation(owner.username,sid):null;
-      if(presentation&&!terminal(presentation.status)&&(!device?.online||Date.now()-device.at>15000)&&Date.now()-Date.parse(presentation.createdAt)>30000){
+      if(presentation&&!terminal(presentation.status)&&(!device?.online||Date.now()-device.at>15000)&&Date.now()-Date.parse(presentation.createdAt)>30000&&!await store.handoverPending(owner.deviceId)){
         presentation.status='interrupted';presentation.sourceComplete=false;presentation.endedAt=iso();
         presentation.error='La conexión del dispositivo terminó. Se conservaron los registros disponibles.';
-        await store.archive(presentation);await store.clearActive(owner.deviceId,presentation.id);
+        // Si la toma se repartió entre conexiones, se conserva el audio que ya estaba guardado.
+        let audio:Buffer|undefined;try{const parts=await store.audioParts(presentation);if(parts.length)audio=wav(Buffer.concat(parts));}catch{}
+        await store.archive(presentation,audio);await store.deleteAudioParts(presentation).catch(()=>{});await store.clearActive(owner.deviceId,presentation.id);
       }
       json(res,200,{username:owner.username,deviceId:owner.deviceId,device,
-        presentation,legacyAdmin:canViewLegacyReport(owner),aiConfigured:Boolean(process.env.OPENAI_API_KEY),workerOnline:await workerOnline(owner.deviceId),maxSeconds:180});return;
+        presentation,legacyAdmin:canViewLegacyReport(owner),aiConfigured:Boolean(process.env.OPENAI_API_KEY),workerOnline:await workerOnline(owner.deviceId),maxSeconds:180,sessionCapSeconds:sessionCapSeconds(Boolean(device?.handover)),defaultEndWord:DEFAULT_END_WORD});return;
     }
     if(action==='history'&&req.method==='GET'){json(res,200,{sessions:await store.history(owner.username)});return;}
     if(['presentation','export','audio'].includes(action)&&req.method==='GET'){
@@ -80,7 +83,8 @@ export async function handler(req:IncomingMessage,res:ServerResponse){
       const b=await body(req);
       if(b.consent!==true){json(res,400,{error:'Confirma que aceptas grabar y procesar esta presentación'});return;}
       if(typeof b.title!=='string'||!b.title.trim()||b.title.length>120||!['pre','post','practice'].includes(String(b.phase))||
-         !Number.isInteger(b.seconds)||Number(b.seconds)<15||Number(b.seconds)>180){json(res,400,{error:'Revisa el tema, la etapa y la duración (15 a 180 segundos)'});return;}
+         !Number.isInteger(b.seconds)||(Number(b.seconds)!==0&&(Number(b.seconds)<15||Number(b.seconds)>180))){json(res,400,{error:'Revisa el tema, la etapa y la duración (15 a 180 segundos o sin límite)'});return;}
+      if(b.endWord!==undefined&&!validEndWord(b.endWord)){json(res,400,{error:'La palabra de cierre debe tener de una a tres palabras de al menos 3 letras, sin símbolos'});return;}
       if(b.idealText!==undefined&&(typeof b.idealText!=='string'||b.idealText.length>20000)){json(res,400,{error:'El guion debe contener como máximo 20 000 caracteres'});return;}
       if(b.audience!==undefined&&(typeof b.audience!=='string'||b.audience.length>120)){json(res,400,{error:'Revisa la descripción del público'});return;}
       const device=await store.getPresence(owner.deviceId);
@@ -91,7 +95,7 @@ export async function handler(req:IncomingMessage,res:ServerResponse){
       const id=randomBytes(8).toString('hex');
       if(!await store.setActive(owner.deviceId,id)){json(res,409,{error:'Ya hay una presentación activa'});return;}
       const p:Presentation={id,username:owner.username,deviceId:owner.deviceId,title:b.title.trim(),audience:typeof b.audience==='string'?b.audience.trim():'',idealText:typeof b.idealText==='string'?b.idealText.trim():'',phase:b.phase as Presentation['phase'],
-        feedback:b.feedback!==false,mode,status:'pending',createdAt:iso(),durationLimit:Number(b.seconds),transcript:'',advice:'',summary:'',
+        feedback:b.feedback!==false,mode,status:'pending',createdAt:iso(),durationLimit:Number(b.seconds),endWord:typeof b.endWord==='string'?b.endWord.trim():DEFAULT_END_WORD,transcript:'',advice:'',summary:'',
         metrics:new SpeechMeter().metrics(''),events:[],providerFinalized:false,sourceComplete:false};
       try{await store.saveLive(p);await store.checkpoint(p);await store.sendCommand(owner.deviceId,{id:randomUUID(),op:'start',sid:id});}
       catch(e){await store.clearActive(owner.deviceId,id);throw e;}

@@ -173,3 +173,35 @@ test('los intervalos de evidencia se construyen con los fragmentos de audio y no
  assert.equal(result.dimensions.organization.startMs,8000);assert.equal(result.dimensions.organization.endMs,10000);
  assert.equal(result.dimensions.development.startMs,undefined);
 });
+
+test('la palabra de cierre se reconoce sin tildes ni mayúsculas y devuelve dónde empieza',async()=>{
+  const {findEndWord,validEndWord,holdFor}=await import('../lib/control.js');
+  const text='Y con esto concluyo. ¡ENSAYA, Finalizar!';
+  assert.equal(findEndWord(text,'ensaia finalizar'),text.indexOf('¡')+1);
+  assert.equal(findEndWord('ensaia no termina','ensaia finalizar'),-1);
+  assert.equal(validEndWord('ensaia finalizar'),true);assert.equal(validEndWord('a'),false);assert.equal(validEndWord('uno dos tres cuatro'),false);assert.equal(validEndWord('x; rm'),false);
+  assert.ok(holdFor('Habla más despacio')>holdFor('Sí'));
+});
+test('el silencio durante una interrupción no cuenta como pausa ni reduce el ritmo',()=>{
+  const m=new SpeechMeter();for(let i=0;i<50;i++)m.audio(Buffer.alloc(640));     // 1 s de silencio real
+  m.interrupt(2000);for(let i=0;i<100;i++)m.audio(Buffer.alloc(640));            // 2 s de escucha
+  const r=m.metrics('uno dos tres cuatro cinco seis');
+  assert.equal(r.seconds,3);assert.equal(r.interruptionSeconds,2);assert.equal(r.silenceSeconds,1);assert.equal(r.longPauses,1);
+  assert.equal(r.wordsPerMinute,360);assert.equal(m.inInterruption(1000,3000),true);assert.equal(m.inInterruption(500,1500),false);
+});
+test('la verificación de tema solo acepta JSON bien formado',async()=>{
+  const {parseTopic}=await import('../lib/topic.js');
+  assert.deepEqual(parseTopic('{"on_topic":false,"detected_topic":"energía solar","confidence":88}'),{onTopic:false,detected:'energía solar',confidence:88});
+  assert.equal(parseTopic('{"on_topic":false,"detected_topic":"","confidence":90}'),null);
+  assert.equal(parseTopic('no es json'),null);
+});
+
+test('una toma sin límite se acota al tiempo de conexión de la plataforma',async()=>{
+  const {sessionCapSeconds,platformLimitSeconds}=await import('../lib/control.js');
+  const saved={v:process.env.VERCEL,c:process.env.CONNECTION_MAX_SECONDS};
+  try{
+    delete process.env.VERCEL;delete process.env.CONNECTION_MAX_SECONDS;assert.equal(platformLimitSeconds(),0);assert.equal(sessionCapSeconds(),14400);
+    process.env.VERCEL='1';assert.equal(sessionCapSeconds(),240);
+    process.env.CONNECTION_MAX_SECONDS='800';assert.equal(sessionCapSeconds(),740);
+  }finally{for(const [k,v] of [['VERCEL',saved.v],['CONNECTION_MAX_SECONDS',saved.c]] as const){if(v===undefined)delete process.env[k];else process.env[k]=v;}}
+});

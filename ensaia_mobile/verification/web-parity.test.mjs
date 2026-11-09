@@ -75,6 +75,7 @@ async function fixture(t, options = {}) {
   ` });
   const state = { online: options.online !== false, active: null, calls: [] };
   const sessions = options.empty ? [] : [later, earlier];
+  state.sessions = sessions;
   await page.route('**/api/server?**', async route => {
     const request = route.request();
     const query = new URL(request.url()).searchParams;
@@ -134,8 +135,16 @@ async function fixture(t, options = {}) {
 const visible = (page, selector) => page.locator(selector).waitFor({ state: 'visible' });
 const content = async (page, selector, expected) => {
   await visible(page, selector);
-  assert.match(await page.locator(selector).innerText(), expected);
+  // La interfaz se actualiza por sondeo: se espera el texto en lugar de leerlo una sola vez.
+  const until = Date.now() + 7_000;
+  let text = await page.locator(selector).innerText();
+  while (!expected.test(text) && Date.now() < until) {
+    await page.waitForTimeout(100);
+    text = await page.locator(selector).innerText();
+  }
+  assert.match(text, expected);
 };
+const sessionsFor = state => state.sessions;
 const tab = (page, name) => page.locator(`[data-tab="${name}"]`).click();
 
 const reportPre = {
@@ -211,7 +220,7 @@ test('mi práctica: dispositivo, Whisper y GPT-Live, formulario y consentimiento
   const { page, state } = await fixture(t, { online: false });
   await content(page, '#top-status', /Dispositivo desconectado/);
   assert.ok(await page.locator('#start').isDisabled());
-  assert.deepEqual(await page.locator('#seconds option').evaluateAll(items => items.map(o => o.value)), ['60', '120', '180', '30']);
+  assert.deepEqual(await page.locator('#seconds option').evaluateAll(items => items.map(o => o.value)), ['60', '120', '180', '30', '0']);
   await content(page, '#engine-status', /Whisper conectado/);
   state.online = true;
   await page.getByText('Dispositivo conectado', { exact: true }).waitFor();
@@ -231,7 +240,7 @@ test('mi práctica: dispositivo, Whisper y GPT-Live, formulario y consentimiento
   await visible(page, '#stop');
   assert.deepEqual(state.calls.find(x => x.action === 'start').data, {
     title: 'Mi tema', audience: 'Mi público', idealText: 'Mi guion', phase: 'pre',
-    seconds: 120, feedback: true, mode: 'live', consent: true,
+    seconds: 120, endWord: 'ensaia finalizar', feedback: true, mode: 'live', consent: true,
   });
 });
 
@@ -259,6 +268,41 @@ test('captura: voz, transcripción, consejos, métricas, rúbrica y resumen al f
   await content(page, '#quality-note', /Audio completo y presentación guardada/);
   assert.deepEqual(state.calls.find(x => x.action === 'stop').data, { id: recorded.id });
   assert.equal((await page.evaluate(() => window.voiceMessages)).at(-1).type, 'cancel');
+});
+
+test('toma sin límite: interrupción hablada, tema detectado y palabra de cierre', async t => {
+  const { page, state } = await fixture(t);
+  await page.locator('#title').fill('La fotosíntesis');
+  await page.locator('#seconds').selectOption('0');
+  await page.locator('#end-word').fill('hasta aquí');
+  await page.locator('#consent').check();
+  await page.locator('#start').click();
+  await visible(page, '#stop');
+  const sent = state.calls.find(x => x.action === 'start').data;
+  assert.equal(sent.seconds, 0);
+  assert.equal(sent.endWord, 'hasta aquí');
+  state.active = { ...state.active, durationLimit: 0 };
+  await content(page, '#session-note', /Di «hasta aquí» para terminar/);
+  assert.equal(await page.locator('#end-word').isVisible(), false);
+  // El servidor detecta otro tema e interrumpe: se lee de inmediato y la pantalla pide escuchar.
+  const notice = 'Detecto que hablas de «el fútbol» y no de «La fotosíntesis». Tomaré «el fútbol» como tu tema.';
+  state.active = {
+    ...state.active, title: 'el fútbol', declaredTitle: 'La fotosíntesis', advice: state.active.advice + ' ' + notice,
+    events: [...state.active.events, { id: 3, kind: 'advice', text: notice, audioMs: 35000, interrupt: true, holdMs: 9000 }],
+    metrics: { ...state.active.metrics, recentRms: 0.0001 },
+  };
+  await page.waitForFunction(text => window.voiceMessages.some(m => m.text === text), notice);
+  await content(page, '#session-note', /no cuenta como pausa/);
+  assert.match(await page.locator('#recording-badge').textContent(), /ENSAIA TE HABLA/);
+  await content(page, '#session-note', /Escribiste «La fotosíntesis», pero entiendo que hablas de «el fútbol»/);
+  await content(page, '#advice', /interrupción/);
+  // El silencio de escucha no dispara el aviso de señal baja.
+  await page.waitForTimeout(2500);
+  assert.equal((await page.evaluate(() => window.voiceMessages)).some(m => /señal es muy baja/.test(m.text || '')), false);
+  // La palabra de cierre termina la toma desde el servidor.
+  sessionsFor(state).unshift({ ...state.active, status: 'completed', endedBy: 'endword' });
+  state.active = { ...state.active, status: 'completed', endedBy: 'endword' };
+  await content(page, '#summary-source', /Terminaste con tu palabra de cierre/);
 });
 
 test('sin retroalimentación: conserva el discurso y muestra la evaluación al finalizar', async t => {
