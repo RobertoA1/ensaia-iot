@@ -3,6 +3,10 @@
     "preview": {
       "distribution": "internal",
       "android": { "buildType": "apk" }
+    },
+    "mqtt": {
+      "extends": "preview",
+      "env": { "EXPO_PUBLIC_ENSAIA_MODE": "mqtt" }
     }
   }
 }
