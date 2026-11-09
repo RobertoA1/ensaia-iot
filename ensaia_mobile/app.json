@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "ENSAIA MQTT",
+    "slug": "ensaia-mqtt",
+    "version": "1.0.0",
+    "platforms": ["android"],
+    "orientation": "portrait",
+    "android": { "package": "pe.ensaia.mobile" },
+    "plugins": ["./plugins/with-broker-ca.cjs"]
+  }
+}
