@@ -1,0 +1,23 @@
+name: ensaia-mobile
+services:
+  emqx:
+    image: emqx/emqx-enterprise:6.3.2
+    restart: unless-stopped
+    hostname: broker.ensaia-mobile.local
+    env_file: ../../.private/lab/broker.env
+    environment:
+      EMQX_NODE_NAME: emqx@broker.ensaia-mobile.local
+    ports:
+      - '${ENSAIA_BROKER_BIND:?Ejecuta npm run provision}:8084:8084'
+      - '127.0.0.1:18084:18083'
+    volumes:
+      - data:/opt/emqx/data
+      - ./base.hocon:/opt/emqx/etc/base.hocon:ro
+      - ../../.private/lab/broker:/opt/emqx/etc/ensaia:ro
+    healthcheck:
+      test: ['CMD', '/opt/emqx/bin/emqx', 'ctl', 'status']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  data:

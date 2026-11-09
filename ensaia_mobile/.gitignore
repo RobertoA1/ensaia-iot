@@ -1,0 +1,24 @@
+# --- Generado / compilado ---
+/node_modules/
+/dist/
+/android/
+/ios/
+/.expo/
+/.cache/
+*.apk
+*.aab
+*.jks
+*.key
+*.tsbuildinfo
+
+# --- Secretos y configuración local ---
+.env
+.env.*
+!.env.example
+.private/
+
+# --- Certificados de lab ---
+# Por defecto se ignoran todos los certificados y llaves privadas
+certs/*
+!certs/broker-ca.crt
+!certs/broker-host.txt
