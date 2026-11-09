@@ -11,6 +11,8 @@
     "gateway": "node --disable-warning=ExperimentalWarning --experimental-strip-types --env-file=.private/lab/gateway.env gateway/main.mjs",
     "provision": "node gateway/provision.mjs",
     "test": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test gateway/*.test.mjs",
+    "test:replica": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test verification/webview.test.mjs verification/web-parity.test.mjs",
+    "test:apk": "node verification/apk-smoke.mjs",
     "test:broker": "node --disable-warning=ExperimentalWarning --experimental-strip-types --env-file=.private/lab/gateway.env --test gateway/control.test.mjs",
     "test:cloud": "node --env-file=.private/lab/gateway.env --import ../ensaia_cloud/node_modules/tsx/dist/loader.mjs --test verification/cloud.test.mjs",
     "test:android": "node --env-file=.private/lab/gateway.env --import ../ensaia_cloud/node_modules/tsx/dist/loader.mjs verification/android.mjs",
@@ -18,14 +20,17 @@
   },
   "dependencies": {
     "expo": "~58.0.23",
+    "expo-speech": "58.0.3",
     "mqtt": "5.16.1",
     "react": "19.3.0",
     "react-native": "0.88.1",
     "react-native-safe-area-context": "5.11.1",
+    "react-native-webview": "14.0.1",
     "ws": "8.22.0"
   },
   "devDependencies": {
     "@types/react": "~19.3.0",
+    "playwright-core": "1.65.0",
     "react-test-renderer": "19.3.0",
     "typescript": "~6.0.3"
   }
