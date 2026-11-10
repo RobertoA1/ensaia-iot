@@ -2,12 +2,17 @@
 #include <stdint.h>
 
 // Completa estos datos locales. NO introduzcas aqui la clave de OpenAI.
+// Tus datos de Wi-Fi y MQTT van en config.personal.h (copia config.personal.example.h). Ese archivo está ignorado por git.
+#if __has_include("config.personal.h")
+#include "config.personal.h"
+#else
 static const char WIFI_SSID[] = "TU_WIFI_2_4_GHZ";
 static const char WIFI_PASSWORD[] = "TU_CLAVE_WIFI";
-static const char MQTT_HOST[] = "10.47.145.141";  // IPv4 de la laptop; nunca localhost
+static const char MQTT_HOST[] = "IP_DE_LA_LAPTOP";  // IPv4 de la laptop; nunca localhost
 static const uint16_t MQTT_PORT = 1884;          // EMQX: normalmente 1884; broker integrado: 1883
 static const char MQTT_USER[] = "oratoria";
 static const char MQTT_PASSWORD[] = "CLAVE_MQTT_DEL_SERVIDOR";
+#endif
 // Conserva EXACTAMENTE el DEVICE_ID del .env o .env.emqx del servidor existente.
 // El nombre anterior puede conservarse aunque ahora el hardware sea un ESP32-S3.
 static const char DEVICE_ID[] = "esp32-oratoria";
