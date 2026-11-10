@@ -83,6 +83,14 @@ El ESP32 verifica el certificado y el nombre del servidor, después de sincroniz
 
 Redis mantiene comandos, presencia, bloqueo de dispositivo y estado vivo. El servicio gratuito provisionado usa `redis://`, sin TLS nativo: los valores que contienen usuarios, transcripciones o comandos se cifran con AES-256-GCM y contexto autenticado; los nombres de claves se ocultan mediante HMAC. Esto no elimina la visibilidad de metadatos ni sustituye TLS de transporte. Las cuentas, informes y audios finalizados se guardan en **Vercel Blob privado**. La pérdida de Redis requiere volver a iniciar sesión; los archivos duraderos permanecen en Blob.
 
+## Tema, interrupciones y cierre por voz
+
+- **Tema real.** Durante la toma se compara lo que se dice con el tema escrito. Si dos verificaciones seguidas coinciden en que se habla de otro asunto, ENSAIA lo anuncia («Detecto que hablas de X y no de Y»), toma X como tema y guarda el original en `declaredTitle` y el cambio en `topicShifts`. El resumen final recibe ambos temas.
+- **Interrupciones.** Cada consejo interrumpe: la web lo lee de inmediato y muestra «ENSAIA te habla · escucha»; el Monitor Serie lo marca como `[INTERRUMPE - escucha]`. Mientras dura la lectura estimada (más un margen), el silencio no cuenta como pausa, silencio ni señal baja, y el ritmo se calcula sin ese tiempo (`interruptionSeconds`). No se encadenan interrupciones mientras se escucha. Usa audífonos si el micrófono capta la voz de la laptop.
+- **Sin límite y palabra de cierre.** «Sin límite» envía `seconds: 0`. La toma termina al decir la palabra de cierre (por defecto «ensaia finalizar»; se ignoran tildes y mayúsculas), con **Finalizar** o al llegar al tope. `endedBy` indica cuál ocurrió (`endword`, `user`, `limit`).
+- **Tomas largas en Vercel.** Vercel corta cada conexión a los 300 s. Unos 60 s antes, el servidor guarda la toma (audio en un segmento del Blob, métricas y transcripción) y envía `capture.handover`. La placa sigue capturando en un búfer circular de 60 s en PSRAM, reconecta con `resume` y, al recibir `capture.resume`, reenvía desde la trama indicada. La IA nueva recibe el tema y lo último que se dijo. El WAV final une todos los segmentos. Así una toma «sin límite» dura hasta 2 horas en Vercel y 4 horas en un servidor Node propio (`CONNECTION_MAX_SECONDS` ajusta el corte de la plataforma).
+- **Requisitos de la continuación.** Firmware v2 (`ensaia-cloud-s3-v2`) con **OPI PSRAM** habilitada. Con el firmware v1 la toma se cierra con orden antes del corte y la web lo avisa. En modo Whisper, `worker.py` conserva la toma al reconectar: usa la versión de esta carpeta. Un corte imprevisto de Wi-Fi sigue terminando la toma como interrumpida.
+
 ## Límites de esta versión
 
 - Una cuenta vinculada al dispositivo y una presentación activa por dispositivo; no es un sistema multiestudiante con identificación automática.

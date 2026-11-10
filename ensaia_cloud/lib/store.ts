@@ -1,5 +1,5 @@
 import {createClient} from 'redis';
-import {get, put, list} from '@vercel/blob';
+import {get, put, list, del} from '@vercel/blob';
 import type {Account, Command, Presence, Presentation} from './types.js';
 import {hash,ipKey,passwordHash, randomToken, verifyPassword,seal,unseal} from './security.js';
 import {buildLegacyReport, canViewLegacyReport, legacyArchiveId, type ArchiveIndex, type ArchiveManifest, type ArchiveSource, type LegacyReport} from './legacy-report.js';
@@ -112,6 +112,8 @@ export async function getPresentation(username:string,id:string) {
   return value?.username===username?value:null;
 }
 export async function setActive(deviceId:string,sid:string){const r=await db();return Boolean(await r.set(key(`active:${deviceId}`),sid,{NX:true,EX:600}));}
+/** Una toma larga no debe perder su marca de activa a los diez minutos. */
+export async function touchActive(deviceId:string,sid:string){const r=await db();await r.eval("if redis.call('GET',KEYS[1])==ARGV[1] then return redis.call('EXPIRE',KEYS[1],600) else return 0 end",{keys:[key(`active:${deviceId}`)],arguments:[sid]});}
 export async function activeSid(deviceId:string){const r=await db();return r.get(key(`active:${deviceId}`));}
 export async function clearActive(deviceId:string,sid:string){const r=await db();await r.eval("if redis.call('GET',KEYS[1])==ARGV[1] then return redis.call('DEL',KEYS[1]) else return 0 end",{keys:[key(`active:${deviceId}`)],arguments:[sid]});}
 export async function sendCommand(deviceId:string,command:Command){
@@ -123,6 +125,42 @@ export async function checkpoint(p:Presentation){await writeJSON(`sessions/${p.u
 export async function archive(p:Presentation,audio?:Buffer) {
   if(audio?.length){await put(`audio/${p.username}/${p.id}.wav`,audio,{...blobOptions(),addRandomSuffix:false,allowOverwrite:true,contentType:'audio/wav',cacheControlMaxAge:60});p.audioSaved=true;}
   p.archived=true;await checkpoint(p);await saveLive(p);
+}
+const partPath=(p:Presentation,i:number)=>`audio/${p.username}/${p.id}.part-${i}.pcm`;
+/** PCM capturado por una conexión que va a renovarse; se une al WAV al terminar la toma. */
+export async function saveAudioPart(p:Presentation,index:number,pcm:Buffer){
+  await put(partPath(p,index),pcm,{...blobOptions(),addRandomSuffix:false,allowOverwrite:true,contentType:'application/octet-stream',cacheControlMaxAge:60});
+}
+export async function audioParts(p:Presentation):Promise<Buffer[]>{
+  const parts:Buffer[]=[];
+  for(let i=0;i<(p.audioParts??0);i++){
+    const file=await get(partPath(p,i),{...blobOptions(),useCache:false});
+    if(!file||file.statusCode!==200||!file.stream)throw new Error('Falta un segmento de audio');
+    parts.push(Buffer.from(await new Response(file.stream).arrayBuffer()));
+  }
+  return parts;
+}
+export async function deleteAudioParts(p:Presentation){
+  if(p.audioParts)await del(Array.from({length:p.audioParts},(_,i)=>partPath(p,i)),{token:process.env.BLOB_READ_WRITE_TOKEN});
+}
+export interface ResumeState {sid:string; meter:unknown; coach?:unknown}
+/** Marca que una conexión está guardando la toma para que la siguiente la espere. */
+export async function beginHandover(deviceId:string,sid:string){const r=await db();await r.set(key(`handover:${deviceId}`),sid,{EX:60});}
+export async function cancelHandover(deviceId:string){const r=await db();await r.del(key(`handover:${deviceId}`));}
+export async function saveResume(deviceId:string,state:ResumeState){
+  const r=await db();await r.set(key(`resume:${deviceId}`),seal(JSON.stringify(state),`resume:${deviceId}`),{EX:120});await r.del(key(`handover:${deviceId}`));
+}
+export async function handoverPending(deviceId:string){const r=await db();return Boolean(await r.exists([key(`handover:${deviceId}`),key(`resume:${deviceId}`)]));}
+/** Espera el estado que dejó la conexión anterior. Devuelve null si esa conexión no llegó a guardarlo. Sin `sid` acepta el de cualquier toma. */
+export async function takeResume(deviceId:string,sid:string,waitMs=30000):Promise<ResumeState|null>{
+  const r=await db();const until=Date.now()+waitMs;let last=false;
+  for(;;){
+    const raw=await r.getDel(key(`resume:${deviceId}`));
+    if(raw){const state=JSON.parse(unseal(raw,`resume:${deviceId}`)) as ResumeState;return !sid||state.sid===sid?state:null;}
+    if(last||Date.now()>until)return null;
+    // Si la marca ya no existe, la conexión anterior terminó: se mira una vez más por si acaba de guardar.
+    if(!await r.exists(key(`handover:${deviceId}`)))last=true;else await new Promise(done=>setTimeout(done,200));
+  }
 }
 export async function history(username:string) {
   const result=await list({prefix:`sessions/${username}/`,limit:100,token:process.env.BLOB_READ_WRITE_TOKEN});

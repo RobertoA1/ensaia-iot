@@ -31,7 +31,7 @@ test('dispositivo autorizado → usuario → web → grabación → log → arch
   const server=http.createServer((req,res)=>void handler(req,res));
   const wss=new WebSocketServer({server,maxPayload:4096});
   const assessmentCalls:{final:boolean;ideal:string}[]=[];let assessmentFail=false;
-  wss.on('connection',ws=>new DeviceConnection(ws,event=>new FakeCoach(event),async(_text,seconds,final=false,_audience='',ideal='')=>{assessmentCalls.push({final,ideal});if(assessmentFail)throw new Error('fallo simulado');return ({seconds,at:new Date().toISOString(),total:80,dimensions:{clarity:{score:80,evidence:'Buenos días',suggestion:'Define la idea'},organization:{score:80,evidence:'Organizar',suggestion:'Ordena'},development:{score:80,evidence:'Por ejemplo',suggestion:'Ejemplifica'}},complexity:'Explica el término',next:'Añade un ejemplo.'});}));
+  wss.on('connection',ws=>new DeviceConnection(ws,event=>new FakeCoach(event),async(_text,seconds,final=false,_audience='',ideal='')=>{assessmentCalls.push({final,ideal});if(assessmentFail)throw new Error('fallo simulado');return ({seconds,at:new Date().toISOString(),total:80,dimensions:{clarity:{score:80,evidence:'Buenos días',suggestion:'Define la idea'},organization:{score:80,evidence:'Organizar',suggestion:'Ordena'},development:{score:80,evidence:'Por ejemplo',suggestion:'Ejemplifica'}},complexity:'Explica el término',next:'Añade un ejemplo.'});},async(_text,topic)=>({onTopic:true,detected:topic,confidence:90})));
   await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));
   const base=`http://127.0.0.1:${(server.address() as any).port}`;
   const connect=async()=>{const ws=new WebSocket(base.replace('http','ws')+'/api/server?role=device');await new Promise<void>(r=>ws.once('open',r));return ws;};

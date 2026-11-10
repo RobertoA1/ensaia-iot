@@ -10,8 +10,9 @@
     "dev": "tsx --env-file=.env.local scripts/dev.ts",
     "import:legacy": "tsx scripts/import-legacy.ts",
     "build": "tsc --noEmit && vite build",
-    "test": "tsx --test tests/core.test.ts",
+    "test": "tsx --test tests/core.test.ts && node --import tsx --disable-warning=ExperimentalWarning --experimental-test-module-mocks --test tests/session.test.ts",
     "test:integration": "tsx --env-file=.env.local --test tests/integration.test.ts",
+    "test:handover": "tsx --env-file=.env.local --test tests/handover.integration.test.ts",
     "test:whisper": "tsx --env-file=.env.local --test tests/whisper.integration.test.ts"
   },
   "dependencies": {
